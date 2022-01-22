@@ -1,0 +1,5 @@
+# ninja log v5
+0	348	6645507218784558	NesEmulator/CMakeFiles/NesEmulator.dir/NesEmulator.cpp.obj	b9be5d7ba267e3d1
+348	541	6645507220639392	NesEmulator/NesEmulator.exe	9ec45bb1eea91e4
+2	651	6645653444685803	NesEmulator/CMakeFiles/NesEmulator.dir/main.cpp.obj	6b4c2aceb462a130
+651	951	6645653446695168	NesEmulator/NesEmulator.exe	af2d900173f3146c
