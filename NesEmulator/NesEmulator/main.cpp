@@ -1,9 +1,14 @@
 #include <iostream>
 
+#include "Nes.h"
+
 using namespace std;
 
 int main()
 {
-	cout << "Hello CMake and Hello World." << endl;
+	cout << PROJECT_NAME << " " << VER << " by " << AUTHOR << endl;
+
+	Nes* nes = Nes::getInstance();
+
 	return 0;
 }
