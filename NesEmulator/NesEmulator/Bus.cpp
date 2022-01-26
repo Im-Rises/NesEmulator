@@ -5,7 +5,7 @@
 Bus::Bus(Cpu* cpu)
 {
 	this->cpu = cpu;
-	this->cpu->connectBus(this);
+	this->cpu->connectToBus(this);
 }
 
 uint8 Bus::read(const uint16& address)

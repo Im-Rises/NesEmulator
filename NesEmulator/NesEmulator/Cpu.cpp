@@ -8,15 +8,24 @@ using namespace std;
 Cpu::Cpu()
 {
 	pc.reg = 0;
-	sp.reg = 0;
+	sp = 0;
 	status.reg = 0;
 	A = X = Y = 0;
+	opcode = 0;
 	cycles = 0;
+
+	cout << instructions[254].addressingModeName << endl;
+	(this->*instructions[254].addressingMode)();
 }
 
-void Cpu::connectBus(Bus* bus)
+void Cpu::connectToBus(Bus* bus)
 {
 	this->bus = bus;
+}
+
+void Cpu::doCycle()
+{
+
 }
 
 uint8 Cpu::read(const uint16& address)
@@ -39,80 +48,28 @@ void executeOpcode()
 	//Switch or structure function pointer ?
 }
 
+/// <summary>
+/// Addressing modes
+/// </summary>	
+void Cpu::ACC() {}
+void Cpu::IMM() {}
+void Cpu::ABS() {}
+void Cpu::ZP0() {}
+void Cpu::ZPX() {}
+void Cpu::ZPY() {}
+void Cpu::ABX() { cout << "Working" << endl; }
+void Cpu::ABY() {}
+void Cpu::IMP() {}
+void Cpu::REL() {}
+void Cpu::IZX() {}
+void Cpu::IZY() {}
+void Cpu::IND() {}
 
+void Cpu::YYY() {}
 
-uint8 Cpu::Accum()
-{
-
-}
-
-uint8 Cpu::IMM()
-{
-	return read(pc.reg++);
-}
-
-uint16 Cpu::Absolute()
-{
-	uint8 lo = read(pc.reg++);
-	return ((read(pc.reg++) << 8) | lo);
-}
-
-uint16 Cpu::ZP()
-{
-	return read(pc.reg++);
-}
-
-uint8 Cpu::ZPX()
-{
-	return (read(pc.reg++) + X);
-}
-
-uint8 Cpu::ZPY()
-{
-	return (read(pc.reg++) + Y);
-}
-
-uint8 Cpu::ABSX()
-{
-	uint8 lo = read(pc.reg++);
-	return ((((read(pc.reg++) << 8) | lo) + X) & 0x00FF);
-}
-
-uint8 Cpu::ABSY()
-{
-	uint8 lo = read(pc.reg++);
-	return ((((read(pc.reg++) << 8) | lo) + Y) & 0x00FF);
-}
-
-uint8 Cpu::Implied()
-{
-
-}
-
-uint8 Cpu::Relative()
-{
-	int8 relativeAddress = read(pc.reg++);
-	pc.reg += relativeAddress;
-}
-
-uint8 Cpu::INDX()
-{
-	return read(X + pc.reg++);
-}
-
-uint8 Cpu::INDY()
-{
-	return read(Y + pc.reg++);
-}
-
-uint8 Cpu::Indirect()
-{
-	uint8 lo = read(pc.reg++);
-	pc.reg = (read(pc.reg++) << 8) | lo;
-	pc.reg++;
-}
-
-
+/// <summary>
+/// Opcodes
+/// </summary>
 void Cpu::ADC() {}
 void Cpu::AND() {}
 void Cpu::ASL() {}
@@ -182,3 +139,5 @@ void Cpu::TSX() {}
 void Cpu::TXA() {}
 void Cpu::TXS() {}
 void Cpu::TYA() {}
+
+void Cpu::XXX() {}
