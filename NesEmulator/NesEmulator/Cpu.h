@@ -55,16 +55,18 @@ private:
 	uint8 X;
 	uint8 Y;
 
-	uint8 opcode;
 	uint8 cycles;
+
+	uint8 opcode;
+	uint8 fetched;
 
 	//use of a struct with function pointers to make easy the disassembly
 	struct
 	{
 		string opcodeName;
-		void (Cpu::* execute)(void) = nullptr;
+		void (Cpu::* executeOpcode)(void) = nullptr;
 		string addressingModeName;
-		void (Cpu::* addressingMode)(void) = nullptr;
+		void (Cpu::* doAddressing)(void) = nullptr;
 		uint8 cycles = 0;
 	}
 	const instructions[0xFF + 1] =
@@ -355,7 +357,7 @@ private:
 		{"XXX",&Cpu::XXX,"YYY",&Cpu::YYY,0},
 		{"SBC",&Cpu::SBC,"ABX",&Cpu::ABX,4},
 		{"INC",&Cpu::INC,"ABX",&Cpu::ABX,7},
-		{"XXX",&Cpu::XXX,"XXX",&Cpu::XXX,0}
+		{"XXX",&Cpu::XXX,"YYY",&Cpu::YYY,0}
 
 	};
 
@@ -363,8 +365,8 @@ private:
 
 public:
 	Cpu();
-	void connectToBus(Bus* bus);
 	void doCycle();
+	void connectToBus(Bus* bus);
 
 private:
 	uint8 read(const uint16& address);
@@ -374,9 +376,6 @@ private:
 	//void reset();
 	//void irq();
 	//void nmi();
-
-	uint8 fetchOpcode();
-	void executeOpcode();
 
 	/// <summary>
 	/// Addressing modes
@@ -396,6 +395,7 @@ private:
 	void IND();		//Indirect
 
 	void YYY();		//Unknown addressing mode
+
 
 	/// <summary>
 	/// Opcodes

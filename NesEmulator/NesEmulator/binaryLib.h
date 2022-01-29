@@ -15,5 +15,4 @@ uint8 setBit(const uint8& byte, const int& bitIndex);
 uint8 resetBit(const uint8& byte, const int& bitIndex);
 bool testBit(const int& value, const int& bitNumber);
 
-
 #endif
