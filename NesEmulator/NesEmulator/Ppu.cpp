@@ -60,6 +60,8 @@ uint8 Ppu::readPpu(const uint16& address)
 		break;
 	}
 	}
+
+	return 0;
 }
 
 void Ppu::writePpu(const uint16& address, const uint8& data)

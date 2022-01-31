@@ -6,4 +6,5 @@
 PpuBus::PpuBus(Ppu* ppu, Cartridge* cartridge)
 {
 	this->ppu = ppu;
+	this->cartridge = cartridge;
 }

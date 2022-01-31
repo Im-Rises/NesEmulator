@@ -26,8 +26,8 @@ uint8 Bus::read(const uint16& address)
 		return mmu->read(address);
 	else if (0x2000 <= address && address < 0x4000)//Read ppu
 		return ppu->readPpu(address);
-	else//Read cartridge
-		return cartridge->read(address);
+	//else//Read cartridge
+	//	return cartridge->read(address);
 }
 
 void Bus::write(const uint16& address, const uint8& data)
