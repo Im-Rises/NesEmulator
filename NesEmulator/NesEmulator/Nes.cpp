@@ -4,7 +4,7 @@
 
 Nes* Nes::nesInstance = nullptr;
 
-Nes::Nes() :bus(&cpu)
+Nes::Nes() :bus(&cpu, &mmu, &cartridge, &ppu)
 {
 
 }

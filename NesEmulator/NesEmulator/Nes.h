@@ -5,11 +5,12 @@
 #define AUTHOR "Im-Rises"
 #define PROJECT_NAME "NesEmulator"
 
-#include "Cpu.h"
-#include "Ppu.h"
-#include "Apu.h"
-#include "Mmu.h"
 #include "Bus.h"
+#include "Cpu.h"
+#include "Mmu.h"
+#include "Cartridge.h"
+#include "Ppu.h"
+//#include "Apu.h"
 
 class Nes
 {
@@ -17,11 +18,14 @@ private:
 	static Nes* nesInstance;
 	Nes();
 
-	Cpu cpu;
-	//Ppu ppu;
+	Cpu cpu;	
+	Cartridge cartridge;
+	Mmu mmu;
+	Ppu ppu;
 	//Apu apu;
-	//Mmu mmu;
+
 	//Joypad joypad;
+
 	Bus bus;
 
 public:

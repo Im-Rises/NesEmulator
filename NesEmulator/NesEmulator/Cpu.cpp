@@ -1,9 +1,7 @@
 #include "Cpu.h"
 
-#include "Bus.h"
 #include <iostream>
-
-using namespace std;
+#include "Bus.h"
 
 Cpu::Cpu()
 {
@@ -20,7 +18,13 @@ Cpu::Cpu()
 	relativeAddress = 0;
 }
 
-void Cpu::doCycle()
+void Cpu::connectToBus(Bus* bus)
+{
+	this->bus = bus;
+}
+
+
+void Cpu::clock()
 {
 	if (cycles == 0)
 	{
@@ -31,9 +35,47 @@ void Cpu::doCycle()
 	cycles--;
 }
 
-void Cpu::connectToBus(Bus* bus)
+void Cpu::reset()//?
 {
-	this->bus = bus;
+	pc.lo = read(0xFFFC);
+	pc.hi = read(0xFFFD);
+
+	A = X = Y = 0;
+	sp = 0xFD;
+	status.reg = 0;
+
+	//Set emulation variables
+	absoluteAddress = 0;
+	relativeAddress = 0;
+	fetched = 0;
+	opcode = 0;
+
+	cycles = 8;//cycles = 6
+}
+
+void Cpu::irq()//?
+{
+	if (!status.I)
+	{
+		pushPcToStack();
+		status.B = 0;
+		status.I = 1;
+		write(0x100 + sp--, status.reg);
+		pc.lo = read(0xFFFF);
+		pc.hi = read(0xFFFF);
+		cycles = 7;
+	}
+}
+
+void Cpu::nmi()//?
+{
+	pushPcToStack();
+	status.B = 0;
+	status.I = 1;
+	write(0x100 + sp--, status.reg);
+	pc.lo = read(0xFFFF);
+	pc.hi = read(0xFFFF);
+	cycles = 8;
 }
 
 uint8 Cpu::read(const uint16& address)const
@@ -102,13 +144,23 @@ void Cpu::ZPY()
 void Cpu::ABX()
 {
 	uint8 lo = read(pc.reg++);
-	absoluteAddress = ((read(pc.reg++) << 8) | lo) + X;
+	uint8 hi = read(pc.reg++);
+	absoluteAddress = ((hi << 8) | lo) + X;
+
+	// If page boundary is corssed and if the instruction can have an additional cycle dureing page boundary
+	if (((absoluteAddress & 0xFF00) != (hi << 8)) && instructions[opcode].pageBoundaryAddCycle)
+		cycles++;
 }
 
 void Cpu::ABY()
 {
 	uint8 lo = read(pc.reg++);
-	absoluteAddress = ((read(pc.reg++) << 8) | lo) + Y;
+	uint8 hi = read(pc.reg++);
+	absoluteAddress = ((hi << 8) | lo) + Y;
+
+	// If page boundary is corssed and if the instruction can have an additional cycle dureing page boundary
+	if (((absoluteAddress & 0xFF00) != (hi << 8)) && instructions[opcode].pageBoundaryAddCycle)
+		cycles++;
 }
 
 void Cpu::IMP()
@@ -132,9 +184,14 @@ void Cpu::IZX()
 
 void Cpu::IZY()
 {
-	uint8 temp = read(pc.reg++);
-	uint8 lo = read(temp & 0x00FF);
-	absoluteAddress = ((read((temp + 1) & 0x00FF) << 8) | lo) + Y;
+	uint16 temp = read(pc.reg++);
+	uint8 lo = read(temp);
+	uint8 hi = read((temp + 1) & 0x00FF);
+	absoluteAddress = ((hi << 8) | lo) + Y;
+
+	// If page boundary is corssed and if the instruction can have an additional cycle dureing page boundary
+	if (((absoluteAddress & 0xFF00) != (hi << 8)) && instructions[opcode].pageBoundaryAddCycle)
+		cycles++;
 }
 
 void Cpu::IND()
@@ -228,7 +285,6 @@ void Cpu::BIT()
 	status.Z = (temp == 0);
 	status.N = testBit(temp, 7);
 	status.V = testBit(temp, 6);
-	//No update of the fetched data
 }
 
 void Cpu::BMI()
@@ -438,7 +494,7 @@ void Cpu::PLP()//?
 void Cpu::ROL()
 {
 	fetch();
-	uint16 temp = (fetched << 1) | status.C;
+	uint16 temp = (fetched << 1) | (status.C & 0x01);
 	status.C = (temp & 0xFF00);
 	status.Z = (temp == 0);
 	status.N = (temp & 0x80);
@@ -453,12 +509,14 @@ void Cpu::ROR()
 	status.N = (temp & 0x80);
 	updateFetched(temp);
 }
-void Cpu::RTI()
+void Cpu::RTI()//?
 {
 	status.reg = read(++sp + 0x100);
+	status.B = 0;
 	pc.lo = read(++sp + 0x100);
 	pc.hi = read(++sp + 0x100);
 }
+
 void Cpu::RTS()//?
 {
 	pc.lo = read(++sp + 0x100);

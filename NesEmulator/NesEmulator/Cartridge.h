@@ -1,19 +1,19 @@
-#ifndef DEF_PPU
-#define DEF_PPU
+#ifndef DEF_CARTRIDGE
+#define DEF_CARTRIDGE
 
 #include "binaryLib.h"
 
 class Bus;
 
-class Ppu
+class Cartridge
 {
 private:
 	Bus* bus = nullptr;
 
 public:
-	Ppu();
+	Cartridge();
 	void connectToBus(Bus* bus);
 
 };
 
-#endif 
+#endif

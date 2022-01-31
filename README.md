@@ -5,6 +5,7 @@
 Main documentation
 <https://wiki.nesdev.org/w/index.php/NES_reference_guide>
 <https://emudev.de/nes-emulator/overview/>
+<https://www.youtube.com/watch?v=nViZg02IMQo&list=PLrOv9FMX8xJHqMvSGB_9G9nZZ_4IgteYf>
 
 MOS 6502 technical reference:  
 <http://archive.6502.org/datasheets/mos_6501-6505_mpu_preliminary_aug_1975.pdf>
