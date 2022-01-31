@@ -4,7 +4,7 @@
 
 Nes* Nes::nesInstance = nullptr;
 
-Nes::Nes() :bus(&cpu, &mmu, &cartridge, &ppu)
+Nes::Nes() :bus(&cpu, &mmu, &cartridge, &ppu), ppuBus(&ppu, &cartridge)
 {
 
 }
@@ -23,4 +23,9 @@ void Nes::start()
 	//{
 	//	cpu.doCycl();
 	//}
+}
+
+void Nes::insertCartridge(const string& romPath)
+{
+
 }

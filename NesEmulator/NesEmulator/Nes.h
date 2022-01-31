@@ -10,6 +10,7 @@
 #include "Mmu.h"
 #include "Cartridge.h"
 #include "Ppu.h"
+#include "PpuBus.h"
 //#include "Apu.h"
 
 class Nes
@@ -23,14 +24,15 @@ private:
 	Mmu mmu;
 	Ppu ppu;
 	//Apu apu;
-
 	//Joypad joypad;
 
-	Bus bus;
+	Bus bus;// main bus
+	PpuBus ppuBus;// ppu bus
 
 public:
 	static Nes* getInstance();
 	void start();
+	void insertCartridge(const string& romPath);
 
 };
 

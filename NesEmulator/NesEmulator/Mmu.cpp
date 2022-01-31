@@ -15,7 +15,13 @@ void Mmu::connectToBus(Bus* bus)
 	this->bus = bus;
 }
 
-//void Mmu::read()
-//{
-//
-//}
+uint8 Mmu::read(const uint16& address)
+{
+	// Memory mirroring between the address and the max address value
+	return memory[address % 0x0800];
+}
+
+void Mmu::write(const uint16& address, const uint8& data)
+{
+	memory[address % 0x0800] = data;
+}

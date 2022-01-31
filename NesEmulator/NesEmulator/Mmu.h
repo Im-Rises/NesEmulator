@@ -8,15 +8,15 @@ class Bus;
 class Mmu
 {
 private:
-	uint8 memory[0xFFFF];
+	uint8 memory[0x800];
 	Bus* bus = nullptr;
 
 public:
 	Mmu();
 	void connectToBus(Bus* bus);
 
-	uint8 read();
-	void write();
+	uint8 read(const uint16& address);
+	void write(const uint16& address, const uint8& data);
 
 };
 
