@@ -8,21 +8,27 @@ using namespace std;
 Cpu::Cpu()
 {
 	pc.reg = 0;
-	sp = 0;
 	status.reg = 0;
+	sp = 0;
 	A = X = Y = 0;
 
 	opcode = 0;
 	cycles = 0;
+
 	fetched = 0;
+	absoluteAddress = 0;
+	relativeAddress = 0;
 }
 
 void Cpu::doCycle()
 {
-	cycles = 0;
-	opcode = read(pc.reg++);
-	//(this->*instructions[opcode].executeOpcode)();//Execute opcode
-	cycles += instructions[opcode].cycles;
+	if (cycles == 0)
+	{
+		opcode = read(pc.reg++);//Read current opcode
+		(this->*instructions[opcode].executeOpcode)();//Execute opcode
+		cycles += instructions[opcode].cycles;//Add the number of cycles of the instruction
+	}
+	cycles--;
 }
 
 void Cpu::connectToBus(Bus* bus)
@@ -30,7 +36,7 @@ void Cpu::connectToBus(Bus* bus)
 	this->bus = bus;
 }
 
-uint8 Cpu::read(const uint16& address)
+uint8 Cpu::read(const uint16& address)const
 {
 	return bus->read(address);
 }
@@ -40,123 +46,126 @@ void Cpu::write(const uint16& address, const uint8& data)
 	bus->write(address, data);
 }
 
+void Cpu::fetch()
+{
+	(this->*instructions[opcode].doAddressing)();
+	if (!(instructions[opcode].doAddressing == &Cpu::ACC))
+		fetched = read(absoluteAddress);
+	//else
+	//	fetched = A;
+}
+
+void Cpu::updateFetched(const uint8& data)
+{
+	if (!(instructions[opcode].doAddressing == &Cpu::ACC))
+		write(absoluteAddress, data);
+	else
+		A = data;
+}
+
 
 /// <summary>
 /// Addressing modes
 /// </summary>	
 void Cpu::ACC()
 {
-	//fetched = A;
+	//Operation on the accumulator
+	fetched = A;//Not usefull
 }
 
 void Cpu::IMM()
 {
-	//fetched = read(pc.reg++);
+	absoluteAddress = pc.reg++;
 }
 
 void Cpu::ABS()
 {
-	//uint8 lo = read(pc.reg++); fetched = (lo | (read(pc.reg++) << 8));
+	uint8 lo = read(pc.reg++);
+	absoluteAddress = ((read(pc.reg++) << 8) | lo);
 }
 
 void Cpu::ZP0()
 {
-	//fetched = read(pc.reg++);
+	absoluteAddress = read(pc.reg++) & 0x00FF;
 }
 
 void Cpu::ZPX()
 {
-	//fetched = read(pc.reg++) + X;
+	absoluteAddress = (read(pc.reg++) + X) & 0x00FF;
 }
 
 void Cpu::ZPY()
 {
-	//fetched = read(pc.reg++) + Y;
+	absoluteAddress = (read(pc.reg++) + Y) & 0x00FF;
 }
 
 void Cpu::ABX()
 {
-	//uint8 lo = read(pc.reg++);
-	//uint8 hi = read(pc.reg++);
-	//uint16 address = ((lo | (hi << 8)) + X);
-	//fetched = read(address);
-	//((hi << 8) != (address & 0xFF00)) ? cycles++ : cycles;
+	uint8 lo = read(pc.reg++);
+	absoluteAddress = ((read(pc.reg++) << 8) | lo) + X;
 }
 
 void Cpu::ABY()
 {
-	//uint8 lo = read(pc.reg++);
-	//uint8 hi = read(pc.reg++);
-	//uint16 address = ((lo | (hi << 8)) + Y);
-	//fetched = read(address);
-	//((hi << 8) != (address & 0xFF00)) ? cycles++ : cycles;
+	uint8 lo = read(pc.reg++);
+	absoluteAddress = ((read(pc.reg++) << 8) | lo) + Y;
 }
 
-void Cpu::IMP()//ERROR
+void Cpu::IMP()
 {
-	//fetched = read(A);
+	//Do nothing
 }
 
 void Cpu::REL()
 {
-	//int8 relAddress = (int8)read(pc.reg++);
-	//uint16 tempPc = pc.reg + relAddress;
-
-	//if ((tempPc & 0xFF00) == (pc.reg & 0xFF00))//If branch on the same page
-	//{
-	//	cycles++;
-	//}
-	//else//If branch on a different page
-	//{
-	//	cycles += 2;
-	//}
-	//pc.reg = tempPc & 0x00FF;
+	relativeAddress = read(pc.reg++);
+	if (relativeAddress & 0x80)//if value is negative than we flip the upper bits to 1 (a relative address can be negative or positive)
+		relativeAddress |= 0xFF00;
 }
 
 void Cpu::IZX()
 {
-	//uint8 address = read(pc.reg++) + X;
-	//fetched = read((read(address + 1) << 8) | read(address + 0));
+	uint8 temp = read(pc.reg++);
+	uint8 lo = read((temp + X) & 0x00FF);
+	absoluteAddress = ((read((temp + X + 1) & 0x00FF) << 8) | lo);
 }
 
 void Cpu::IZY()
 {
-	//uint8 address = read(pc.reg++);
-	//uint8 lo = read(address + 0);
-	//uint8 hi = read(address + 1);
-	//uint16 absAddress = ((hi << 8) | lo);
-	//absAddress += Y;
-	//fetched = read(absAddress);
-	//((hi << 8) != (address & 0xFF00)) ? cycles++ : cycles;
+	uint8 temp = read(pc.reg++);
+	uint8 lo = read(temp & 0x00FF);
+	absoluteAddress = ((read((temp + 1) & 0x00FF) << 8) | lo) + Y;
 }
 
 void Cpu::IND()
 {
-	//uint8 ptrLo = read(pc.reg++);
-	//uint8 ptrHi = read(pc.reg++);
-	//uint16 pointer = (ptrHi << 8) | ptrLo;
+	uint8 pointerLo = read(pc.reg++);
+	uint16 pointer = ((read(pc.reg++) << 8) | pointerLo);
 
-	//if (ptrLo == 0x00FF)//Simulate hardware bug
-	//{
-	//	fetched = read(((read(pointer & 0xFF00) << 8) | read(pointer + 0)));
-	//}
-	//else
-	//{
-	//	fetched = read(((read(pointer + 1) << 8) | read(pointer + 0)));
-	//}
+	if (pointerLo == 0xFF)// Simulate bug
+	{
+		absoluteAddress = ((read(pointer & 0xFF00) << 8) | read(pointer + 0));
+	}
+	else// Normal behaviour
+	{
+		absoluteAddress = ((read(pointer + 1) << 8) | read(pointer + 0));
+	}
 }
 
 void Cpu::YYY()
 {
-	cout << "Eror, addressing mode unknown" << endl; exit(1);
+	cout << "Eror, addressing mode unknown" << endl;
+	exit(1);
 }
 
 
 /// <summary>
 /// Opcodes
 /// </summary>
-void Cpu::ADC()//Work with unsigned and signed values...
+void Cpu::ADC()
 {
+	fetch();
+
 	uint16 temp = A + fetched + status.C;
 
 	// (If A and fetched are positives or negatives) && (A and result are not of the same sign) 
@@ -164,7 +173,7 @@ void Cpu::ADC()//Work with unsigned and signed values...
 	// even if the carry bit is not set the result cannot be under -128 because the max memory value is -128
 	status.V = (((A ^ fetched) & 0x80) == 0) && (((A ^ temp) & 0x80) != 0);//Used for signed values
 
-	status.C = (temp > 0xFF);//Use with unsigned values //Carry bit same as (temp > 0xFF)
+	status.C = (temp > 0xFF);//Used with unsigned values
 	status.Z = ((temp & 0x00FF) == 0);
 	status.N = (temp & 0x80);
 	A = temp & 0x00FF;
@@ -172,6 +181,7 @@ void Cpu::ADC()//Work with unsigned and signed values...
 
 void Cpu::AND()
 {
+	fetch();
 	A &= fetched;
 	status.Z = (A == 0);
 	status.N = (A & 0b10000000);
@@ -179,19 +189,19 @@ void Cpu::AND()
 
 void Cpu::ASL()
 {
+	fetch();
 	uint16 temp = fetched << 1;
 	status.C = temp > 0xFF;
 	status.Z = ((temp & 0x00FF) == 0);
 	status.N = temp & 0x80;
-	A = temp & 0x00FF;
-	//Memory write to implement
+	updateFetched(temp & 0x00FF);
 }
 
 void Cpu::BCC()
 {
 	if (!status.C)
 	{
-
+		branchingSubFunction();
 	}
 }
 
@@ -199,7 +209,7 @@ void Cpu::BCS()
 {
 	if (status.C)
 	{
-
+		branchingSubFunction();
 	}
 }
 
@@ -207,138 +217,253 @@ void Cpu::BEQ()
 {
 	if (status.Z)
 	{
-
+		branchingSubFunction();
 	}
 }
 
 void Cpu::BIT()
 {
+	fetch();
 	uint8 temp = A & fetched;
 	status.Z = (temp == 0);
 	status.N = testBit(temp, 7);
 	status.V = testBit(temp, 6);
+	//No update of the fetched data
 }
+
 void Cpu::BMI()
 {
 	if (status.N)
 	{
-
+		branchingSubFunction();
 	}
 }
 void Cpu::BNE()
 {
+	if (!status.Z)
+	{
+		branchingSubFunction();
+	}
 }
 void Cpu::BPL()
 {
+	if (!status.N)
+	{
+		branchingSubFunction();
+	}
 }
-void Cpu::BRK()
+void Cpu::BRK()//?
 {
+	pc.reg++;
+	// BRK appears to push data on the stack
+	status.I = 1;
+	pushPcToStack();
+	status.B = 1;
+	write(0x0100 + sp--, status.reg);
+	status.B = 0;
+	pc.hi = read(0xFFFF);
+	pc.lo = read(0xFFFE);
 }
 void Cpu::BVC()
 {
+	if (!status.V)
+	{
+		branchingSubFunction();
+	}
 }
 void Cpu::BVS()
 {
+	if (status.V)
+	{
+		branchingSubFunction();
+	}
 }
 
 void Cpu::CLC()
 {
+	status.C = 0;
 }
 void Cpu::CLD()
 {
+	status.D = 0;
 }
 void Cpu::CLI()
 {
+	status.I = 0;
 }
 void Cpu::CLV()
 {
+	status.V = 0;
 }
 void Cpu::CMP()
 {
+	compareSubFunction(A);
 }
 void Cpu::CPX()
 {
+	compareSubFunction(X);
 }
 void Cpu::CPY()
 {
+	compareSubFunction(Y);
 }
 
 void Cpu::DEC()
 {
+	fetch();
+	uint8 temp = --fetched;
+	write(absoluteAddress, temp);
+	status.Z = (temp == 0);
+	status.N = (temp & 0x80);
 }
 void Cpu::DEX()
 {
+	X--;
+	status.Z = (X == 0);
+	status.N = (X & 0x80);
 }
 void Cpu::DEY()
 {
+	Y--;
+	status.Z = (Y == 0);
+	status.N = (Y & 0x80);
 }
 
 void Cpu::EOR()
 {
+	fetch();
+	A ^= fetched;
+	status.Z = (A == 0);
+	status.N = (A & 0x80);
 }
 
 void Cpu::INC()
 {
+	fetch();
+	uint8 temp = ++fetched;
+	write(absoluteAddress, temp);
+	status.Z = (temp == 0);
+	status.N = (temp & 0x80);
 }
 void Cpu::INX()
 {
+	X++;
+	status.Z = (X == 0);
+	status.N = (X & 0x80);
 }
 void Cpu::INY()
 {
+	Y++;
+	status.Z = (X == 0);
+	status.N = (X & 0x80);
 }
 
 void Cpu::JMP()
 {
+	(this->*instructions[opcode].doAddressing)();
+	pc.reg = absoluteAddress;
 }
 void Cpu::JSR()
 {
+	(this->*instructions[opcode].doAddressing)();
+	pushPcToStack();
+	pc.reg = absoluteAddress;
 }
 
 void Cpu::LDA()
 {
+	fetch();
+	A = fetched;
+	status.Z = (A == 0);
+	status.N = (A & 0x80);
 }
 void Cpu::LDX()
 {
+	fetch();
+	X = fetched;
+	status.Z = (X == 0);
+	status.N = (X & 0x80);
 }
 void Cpu::LDY()
 {
+	fetch();
+	Y = fetched;
+	status.Z = (Y == 0);
+	status.N = (Y & 0x80);
 }
 void Cpu::LSR()
 {
+	fetch();
+	status.C = (fetched & 0x01);
+	uint8 temp = fetched >> 1;
+	status.Z = (temp == 0);
+	status.N = (temp & 0x80);
+	updateFetched(temp);
 }
 
 void Cpu::NOP()
 {
+	//Do nothing
 }
 
 void Cpu::ORA()
 {
+	fetch();
+	A |= fetched;
+	status.Z = (A == 0);
+	status.N = (A & 0x80);
 }
 
 void Cpu::PHA()
 {
+	write(0x0100 + sp--, A);
 }
+
 void Cpu::PHP()
 {
+	write(0x0100 + sp--, status.reg);//?
 }
+
 void Cpu::PLA()
 {
+	A = read(++sp + 0x100);
+	status.Z = (A == 0);
+	status.N = (A & 0x80);
 }
-void Cpu::PLP()
+void Cpu::PLP()//?
 {
+	status.reg = read(++sp + 0x100);
 }
 
 void Cpu::ROL()
 {
+	fetch();
+	uint16 temp = (fetched << 1) | status.C;
+	status.C = (temp & 0xFF00);
+	status.Z = (temp == 0);
+	status.N = (temp & 0x80);
+	updateFetched(temp & 0x00FF);
 }
 void Cpu::ROR()
 {
+	fetch();
+	uint8 temp = (status.C << 7) | (fetched >> 1);
+	status.C = fetched & 0x01;
+	status.Z = (temp == 0);
+	status.N = (temp & 0x80);
+	updateFetched(temp);
 }
 void Cpu::RTI()
 {
+	status.reg = read(++sp + 0x100);
+	pc.lo = read(++sp + 0x100);
+	pc.hi = read(++sp + 0x100);
 }
-void Cpu::RTS()
+void Cpu::RTS()//?
 {
+	pc.lo = read(++sp + 0x100);
+	pc.hi = read(++sp + 0x100);
+	//pc.reg++;
 }
 
 void Cpu::SBC()
@@ -365,43 +490,100 @@ void Cpu::SBC()
 }
 void Cpu::SEC()
 {
+	status.C = 1;
 }
 void Cpu::SED()
 {
+	status.D = 1;
 }
 void Cpu::SEI()
 {
+	status.I = 1;
 }
 void Cpu::STA()
 {
+	(this->*instructions[opcode].doAddressing)();
+	write(absoluteAddress, A);
 }
 void Cpu::STX()
 {
+	(this->*instructions[opcode].doAddressing)();
+	write(absoluteAddress, X);
 }
 void Cpu::STY()
 {
+	(this->*instructions[opcode].doAddressing)();
+	write(absoluteAddress, Y);
 }
 
 void Cpu::TAX()
 {
+	X = A;
+	status.Z = (X == 0);
+	status.N = (X & 0x80);
 }
 void Cpu::TAY()
 {
+	Y = A;
+	status.Z = (Y == 0);
+	status.N = (Y & 0x80);
 }
 void Cpu::TSX()
 {
+	X = sp;
+	status.Z = (X == 0);
+	status.N = (X & 0x80);
 }
 void Cpu::TXA()
 {
+	A = X;
+	status.Z = (A == 0);
+	status.N = (A & 0x80);
 }
 void Cpu::TXS()
 {
+	sp = X;
 }
 void Cpu::TYA()
 {
+	A = Y;
+	status.Z = (A == 0);
+	status.N = (A & 0x80);
 }
 
 void Cpu::XXX()
 {
-	cout << "Eror, opcode unknown" << endl; exit(1);
+	cout << "Eror, opcode unknown" << endl;
+	exit(1);
+}
+
+
+
+
+void Cpu::branchingSubFunction()
+{
+	cycles++;// Branch occurs so we're adding one cycle
+	(this->*instructions[opcode].doAddressing)();//Supposed to be only REL
+	absoluteAddress = pc.reg + relativeAddress;
+
+	if ((absoluteAddress & 0xFF00) != (pc.reg & 0xFF00))// If branch occurs to a different page, add one cycle
+		cycles++;
+
+	pc.reg = absoluteAddress;
+}
+
+void Cpu::compareSubFunction(const uint8& param)
+{
+	fetch();
+	uint16 temp = param - fetched;
+	//status.C = param >= fetched;//?//
+	status.C = temp > 0xFF;
+	status.Z = (temp & 0x00FF) == 0;
+	status.N = temp & 0x0080;
+}
+
+void Cpu::pushPcToStack()
+{
+	write(0x0100 + sp--, pc.hi);
+	write(0x0100 + sp--, pc.lo);
 }

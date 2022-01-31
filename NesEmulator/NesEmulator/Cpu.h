@@ -16,10 +16,10 @@ private:
 	{
 		struct
 		{
-			uint8 lo : 4;
-			uint8 hi : 4;
+			uint8 lo : 8;
+			uint8 hi : 8;
 		};
-		uint8 reg;
+		uint16 reg;
 	}pc;
 
 	//Bitfield and union
@@ -55,12 +55,10 @@ private:
 	uint8 X;
 	uint8 Y;
 
-	uint8 cycles;
+	uint8 cycles;// Number of cycles to execute
+	uint8 opcode;// Opcode being executed
 
-	uint8 opcode;
-	uint8 fetched;
-
-	//use of a struct with function pointers to make easy the disassembly
+	// Use of a struct with function pointers to make easy the disassembly
 	struct
 	{
 		string opcodeName;
@@ -363,14 +361,24 @@ private:
 
 	Bus* bus = nullptr;
 
+	/// <summary>
+	/// Temporary datas for the opcodes 
+	/// </summary>
+	uint8 fetched;
+	uint16 relativeAddress;
+	uint16 absoluteAddress;
+
 public:
 	Cpu();
 	void doCycle();
 	void connectToBus(Bus* bus);
 
 private:
-	uint8 read(const uint16& address);
+	uint8 read(const uint16& address)const;
 	void write(const uint16& address, const uint8& data);
+
+	void fetch();
+	void updateFetched(const uint8& data);
 
 	//void clock();
 	//void reset();
@@ -471,6 +479,10 @@ private:
 	void TYA();
 
 	void XXX();//unknown opcode
+
+	void branchingSubFunction();
+	void compareSubFunction(const uint8& param);
+	void pushPcToStack();
 };
 
 #endif
