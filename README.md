@@ -12,6 +12,7 @@ MOS 6502 technical reference:
 
 Opcodes detail  
 <https://www.masswerk.at/6502/6502_instruction_set.html>  
+<https://ltriant.github.io/2019/11/22/nes-emulator.html>  
 
 Cpu  
 <http://archive.6502.org/datasheets/rockwell_r65c00_microprocessors.pdf>  

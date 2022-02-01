@@ -2,20 +2,27 @@
 
 cmake_minimum_required (VERSION 3.8)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED YES)
+
 set(SRCS main.cpp binaryLib.cpp Nes.cpp Bus.cpp Cpu.cpp Ppu.cpp Apu.cpp Mmu.cpp Joypad.cpp Cartridge.cpp PpuBus.cpp Mapper.cpp)
 set(HEADERS binaryLib.h Nes.h Bus.h Cpu.h Ppu.h Apu.h Mmu.h Joypad.h Cartridge.h PpuBus.h Mapper.h)
-add_executable(NesEmulator ${SRCS} ${HEADERS})
+add_executable(${PROJECT_NAME} ${SRCS} ${HEADERS})
 
 if(WIN32)
-	target_link_libraries(NesEmulator ${CMAKE_CURRENT_SOURCE_DIR}/SDL2/lib/x64/SDL2.lib) # Use static lib to compile program
-	target_link_libraries(NesEmulator ${CMAKE_CURRENT_SOURCE_DIR}/SDL2/lib/x64/SDL2main.lib)
-	target_link_libraries(NesEmulator ${CMAKE_CURRENT_SOURCE_DIR}/SDL2/lib/x64/SDL2test.lib)
+	set(SDL2PATH ${CMAKE_CURRENT_SOURCE_DIR}/SDL2/lib/)
+	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+		target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2PATH}x64/SDL2.lib)
+		target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2PATH}x64/SDL2main.lib)
+		target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2PATH}x64/SDL2test.lib)
+	elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+		target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2PATH}x86/SDL2.lib)
+		target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2PATH}x86/SDL2main.lib)
+		target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2PATH}x86/SDL2test.lib)
+	endif()
 elseif(UNIX)
-	# for linux, you need to install the SDL2 package; <sudo apt-get install libsdl2-dev>
-	find_package(SDL2 REQUIRED) # Find SDL2 package
-	target_link_libraries(NesEmulator PUBLIC SDL2.so) # Use SDL2 linux's package
+	find_package(SDL2 REQUIRED)
+	target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
 else()
 	message(FATAL_ERROR "OS not configured in CMakeLists.txt")
 endif()
-
-target_compile_features(NesEmulator PUBLIC cxx_nullptr) # Implement nullptr if compiler does not
