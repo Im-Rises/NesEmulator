@@ -4,8 +4,6 @@
 #include <string>
 #include "binaryLib.h"
 
-using namespace std;
-
 class Bus;
 
 class Cpu
@@ -60,11 +58,11 @@ private:
 	// Use of a struct with function pointers to make easy the disassembly
 	struct
 	{
-		string opcodeName;
-		void (Cpu::* executeOpcode)(void) = nullptr;
-		string addressingModeName;
-		void (Cpu::* doAddressing)(void) = nullptr;
-		uint8 cycles = 0;
+		std::string opcodeName;
+		void (Cpu::* executeOpcode)(void);
+		std::string addressingModeName;
+		void (Cpu::* doAddressing)(void);
+		uint8 cycles;
 		bool pageBoundaryAddCycle;// Inform if the instruction can lead to an additional cycle due to page boundary
 	}
 	const instructions[0xFF + 1] =

@@ -2,11 +2,9 @@
 
 #include "Nes.h"
 
-using namespace std;
-
 int main()
 {
-	cout << PROJECT_NAME << " " << VER << " by " << AUTHOR << endl;
+	std::cout << PROJECT_NAME << " " << VER << " by " << AUTHOR << std::endl;
 
 	Nes* nes = Nes::getInstance();
 

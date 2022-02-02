@@ -22,15 +22,21 @@ Bus::Bus(Cpu* cpu, Mmu* mmu, Cartridge* cartridge, Ppu* ppu)
 
 uint8 Bus::read(const uint16& address)
 {
-	if (0 <= address && address < 0x2000)//Read ram (Mmu)
-		return mmu->read(address);
-	else if (0x2000 <= address && address < 0x4000)//Read ppu
-		return ppu->readPpu(address);
+	//if (0 <= address && address < 0x2000)//Read ram (Mmu)
+	//	return mmu->read(address);
+	//else if (0x2000 <= address && address < 0x4000)//Read ppu
+	//	return ppu->read(address);
 	//else//Read cartridge
 	//	return cartridge->read(address);
+	return 0;
 }
 
 void Bus::write(const uint16& address, const uint8& data)
 {
-
+	//if (0 <= address && address < 0x2000)//Read ram (Mmu)
+	//	return mmu->write(address, data);
+	//else if (0x2000 <= address && address < 0x4000)//Read ppu
+	//	return ppu->write(address, data);
+	//else//Read cartridge
+	//	return cartridge->write(address, data);
 }

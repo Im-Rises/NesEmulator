@@ -25,7 +25,7 @@ void Nes::start()
 	//}
 }
 
-void Nes::insertCartridge(const string& romPath)
+void Nes::insertCartridge(const std::string& romPath)
 {
 
 }

@@ -4,8 +4,7 @@
 #include "binaryLib.h"
 #include <string>
 #include <vector>
-
-using namespace std;
+#include <memory>
 
 class Bus;
 class PpuBus;
@@ -14,10 +13,10 @@ class Mapper;
 class Cartridge
 {
 private:
-	vector<uint8> prgMemory;
-	vector<uint8> chrMemory;
+	std::vector<uint8> prgMemory;
+	std::vector<uint8> chrMemory;
 
-	//shared_ptr<Mapper> mapper;//
+	std::shared_ptr<Mapper> mapperPtr;// Allow us to be sure of deleting the mapper
 
 	// Header is the 16 first bytes of the rom
 	struct
@@ -43,7 +42,7 @@ public:
 	void connectToBus(Bus* bus);//Main bus connection
 	void connectToPpuBus(PpuBus* ppuBus);//PpuBus connection
 
-	void copyRom(string romPath);
+	void copyRom(const std::string& romPath);
 
 	uint8 read(const uint16& address);
 	void write(const uint16& address, const uint8 data);

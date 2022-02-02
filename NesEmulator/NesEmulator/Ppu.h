@@ -18,8 +18,8 @@ public:
 	void connectToPpuBus(PpuBus* ppuBus);//PpuBus connection
 
 	//Read and write to Ppu
-	uint8 readPpu(const uint16& address);
-	void writePpu(const uint16& address, const uint8& data);
+	uint8 read(const uint16& address);
+	void write(const uint16& address, const uint8& data);
 
 
 	//// Main bus read/write

@@ -32,7 +32,7 @@ private:
 public:
 	static Nes* getInstance();
 	void start();
-	void insertCartridge(const string& romPath);
+	void insertCartridge(const std::string& romPath);
 
 };
 

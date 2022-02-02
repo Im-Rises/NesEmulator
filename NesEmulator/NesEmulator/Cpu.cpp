@@ -211,7 +211,7 @@ void Cpu::IND()
 
 void Cpu::YYY()
 {
-	cout << "Eror, addressing mode unknown" << endl;
+	std::cout << "Eror, addressing mode unknown" << std::endl;
 	exit(1);
 }
 
@@ -611,7 +611,7 @@ void Cpu::TYA()
 
 void Cpu::XXX()
 {
-	cout << "Eror, opcode unknown" << endl;
+	std::cout << "Eror, opcode unknown" << std::endl;
 	exit(1);
 }
 
