@@ -38,11 +38,9 @@ private:
 	PpuBus* ppuBus = nullptr;
 
 public:
-	Cartridge();
+	Cartridge(const std::string& romPath);
 	void connectToBus(Bus* bus);//Main bus connection
 	void connectToPpuBus(PpuBus* ppuBus);//PpuBus connection
-
-	void copyRom(const std::string& romPath);
 
 	uint8 read(const uint16& address);
 	void write(const uint16& address, const uint8 data);

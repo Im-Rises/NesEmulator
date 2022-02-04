@@ -4,15 +4,15 @@
 
 Nes* Nes::nesInstance = nullptr;
 
-Nes::Nes() :bus(&cpu, &mmu, &cartridge, &ppu), ppuBus(&ppu, &cartridge)
+Nes::Nes(const std::string romPath) :cartridge(romPath), bus(&cpu, &mmu, &cartridge, &ppu), ppuBus(&ppu, &cartridge)
 {
 
 }
 
-Nes* Nes::getInstance()
+Nes* Nes::getInstance(const std::string romPath)
 {
 	if (nesInstance == nullptr)
-		nesInstance = new Nes();
+		nesInstance = new Nes(romPath);
 
 	return nesInstance;
 }

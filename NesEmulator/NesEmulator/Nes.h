@@ -17,7 +17,7 @@ class Nes
 {
 private:
 	static Nes* nesInstance;
-	Nes();
+	Nes(const std::string romPath);
 
 	Cpu cpu;	
 	Cartridge cartridge;
@@ -30,7 +30,7 @@ private:
 	PpuBus ppuBus;// ppu bus
 
 public:
-	static Nes* getInstance();
+	static Nes* getInstance(const std::string romPath);
 	void start();
 	void insertCartridge(const std::string& romPath);
 

@@ -8,22 +8,7 @@
 #include "Mapper.h"
 #include "Mapper000.h"
 
-Cartridge::Cartridge()
-{
-
-}
-
-void Cartridge::connectToBus(Bus* bus)
-{
-	this->bus = bus;
-}
-
-void Cartridge::connectToPpuBus(PpuBus* ppuBus)
-{
-	this->ppuBus = ppuBus;
-}
-
-void Cartridge::copyRom(const std::string& romPath)
+Cartridge::Cartridge(const std::string& romPath)
 {
 	std::ifstream input(romPath, std::ios::binary);
 	if (input.is_open())
@@ -86,4 +71,14 @@ void Cartridge::copyRom(const std::string& romPath)
 	{
 		std::cout << "Rom file not found" << std::endl;
 	}
+}
+
+void Cartridge::connectToBus(Bus* bus)
+{
+	this->bus = bus;
+}
+
+void Cartridge::connectToPpuBus(PpuBus* ppuBus)
+{
+	this->ppuBus = ppuBus;
 }

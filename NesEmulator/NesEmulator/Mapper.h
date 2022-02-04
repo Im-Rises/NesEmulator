@@ -5,7 +5,7 @@
 
 class Mapper
 {
-private:
+protected:
 	uint8 nbrPrgBanks;
 	uint8 nbrChrbanks;
 
@@ -14,6 +14,7 @@ public:
 
 	virtual bool readPrg(const uint16& address) = 0;
 	virtual bool writePrg(const uint16& address, const uint8& data) = 0;
+
 	virtual bool readChr(const uint16& address) = 0;
 	virtual bool writeChr(const uint16& address, const uint8& data) = 0;
 
