@@ -42,8 +42,11 @@ public:
 	void connectToBus(Bus* bus);//Main bus connection
 	void connectToPpuBus(PpuBus* ppuBus);//PpuBus connection
 
-	uint8 read(const uint16& address);
-	void write(const uint16& address, const uint8 data);
+	uint8 readPrg(const uint16& address);
+	void writePrg(const uint16& address, const uint8& data);
+
+	uint8 readChr(const uint16& address);
+	void writeChr(const uint16& address, const uint8& data);
 };
 
 #endif

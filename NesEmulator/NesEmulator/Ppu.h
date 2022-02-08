@@ -12,13 +12,17 @@ private:
 	Bus* bus = nullptr;
 	PpuBus* ppuBus = nullptr;
 
+	//SDL_window* window = nullptr;
+	//SDL_Renderer* renderer = nullptr;
+
 public:
 	Ppu();
+	~Ppu();
 	void connectToBus(Bus* bus);//Main bus connection
 	void connectToPpuBus(PpuBus* ppuBus);//PpuBus connection
 
 	//Read and write to Ppu
-	uint8 read(const uint16& address);
+	uint8 readPpu(const uint16& address);
 	void write(const uint16& address, const uint8& data);
 
 

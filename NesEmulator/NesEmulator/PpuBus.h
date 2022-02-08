@@ -9,7 +9,7 @@ class Cartridge;
 class PpuBus
 {
 private:
-	//uint8 pattern[0x2000];// Is in the cartridge (mappers), now that i have implemented pointer to the cartridge
+	//uint8 pattern[0x2000];// Is in the cartridge (mappers), now that i have implemented pointer to the cartridge it is not needed here
 	uint8 palette[32];
 	uint8 nameTable[0x800];
 
@@ -18,6 +18,8 @@ private:
 
 public:
 	PpuBus(Ppu* ppu, Cartridge* cartridge);
+
+	uint8 read(const uint16& address);
 
 };
 

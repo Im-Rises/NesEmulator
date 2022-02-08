@@ -51,11 +51,12 @@ Cartridge::Cartridge(const std::string& romPath)
 
 		}
 
+		//Make_shared is used for derived classes
 		switch (mapperId)
 		{
 		case(0):
 		{
-			mapperPtr = std::make_shared<Mapper000>(header.prgRomSize, header.chrRomSize);//Make_shared is used for derived classes
+			mapperPtr = std::make_shared<Mapper000>(header.prgRomSize, header.chrRomSize);
 			break;
 		}
 		default:
@@ -70,6 +71,7 @@ Cartridge::Cartridge(const std::string& romPath)
 	else
 	{
 		std::cout << "Rom file not found" << std::endl;
+		exit(1);
 	}
 }
 
@@ -81,4 +83,40 @@ void Cartridge::connectToBus(Bus* bus)
 void Cartridge::connectToPpuBus(PpuBus* ppuBus)
 {
 	this->ppuBus = ppuBus;
+}
+
+
+uint8 Cartridge::readPrg(const uint16& address)
+{
+	if (mapperPtr->readPrg(address))
+	{
+		return prgMemory[mapperPtr->getMappedAddress()];
+	}
+	return 0;
+}
+
+void Cartridge::writePrg(const uint16& address, const uint8& data)
+{
+	if (mapperPtr->writePrg(address, data))
+	{
+		prgMemory[mapperPtr->getMappedAddress()] = data;
+	}
+}
+
+
+uint8 Cartridge::readChr(const uint16& address)
+{
+	if (mapperPtr->readChr(address))
+	{
+		return chrMemory[mapperPtr->getMappedAddress()];
+	}
+	return 0;
+}
+
+void Cartridge::writeChr(const uint16& address, const uint8& data)
+{
+	if (mapperPtr->writeChr(address, data))
+	{
+		chrMemory[mapperPtr->getMappedAddress()] = data;
+	}
 }

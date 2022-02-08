@@ -55,7 +55,7 @@ private:
 	uint8 cycles;// Number of cycles to execute
 	uint8 opcode;// Opcode being executed
 
-	// Use of a struct with function pointers to make easy the disassembly
+	// Use of a struct with function pointers to handle the different modes and opcodes.
 	struct
 	{
 		std::string opcodeName;
