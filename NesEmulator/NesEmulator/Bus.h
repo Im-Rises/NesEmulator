@@ -8,6 +8,11 @@ class Mmu;
 class Cartridge;
 class Ppu;
 
+/// <summary>
+/// 16 bit address bus
+/// 8 bit data bus
+/// </summary>
+
 class Bus
 {
 private:

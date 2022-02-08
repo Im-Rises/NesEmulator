@@ -1,6 +1,6 @@
 #include "Nes.h"
 
-#include "SDL2/include/SDL.h"
+//#include "SDL2/include/SDL.h"
 
 Nes* Nes::nesInstance = nullptr;
 

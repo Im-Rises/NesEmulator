@@ -12,8 +12,10 @@ private:
 	Bus* bus = nullptr;
 	PpuBus* ppuBus = nullptr;
 
-	//SDL_window* window = nullptr;
-	//SDL_Renderer* renderer = nullptr;
+	//SDL_window* sdlWindow = nullptr;
+	//SDL_Renderer* sdlRenderer = nullptr;
+
+	uint16 scanLine;
 
 public:
 	Ppu();

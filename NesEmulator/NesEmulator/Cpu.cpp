@@ -147,7 +147,7 @@ void Cpu::ABX()
 	uint8 hi = read(pc.reg++);
 	absoluteAddress = ((hi << 8) | lo) + X;
 
-	// If page boundary is corssed and if the instruction can have an additional cycle dureing page boundary
+	// If page boundary is crossed and if the instruction can have an additional cycle during page boundary
 	if (((absoluteAddress & 0xFF00) != (hi << 8)) && instructions[opcode].pageBoundaryAddCycle)
 		cycles++;
 }
@@ -158,14 +158,14 @@ void Cpu::ABY()
 	uint8 hi = read(pc.reg++);
 	absoluteAddress = ((hi << 8) | lo) + Y;
 
-	// If page boundary is corssed and if the instruction can have an additional cycle dureing page boundary
+	// If page boundary is crossed and if the instruction can have an additional cycle during page boundary
 	if (((absoluteAddress & 0xFF00) != (hi << 8)) && instructions[opcode].pageBoundaryAddCycle)
 		cycles++;
 }
 
 void Cpu::IMP()
 {
-	//Do nothing
+	//Do nothing (use registers only)
 }
 
 void Cpu::REL()

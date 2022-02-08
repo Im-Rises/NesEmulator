@@ -12,6 +12,7 @@
 #include "Ppu.h"
 #include "PpuBus.h"
 //#include "Apu.h"
+//#include "Joypad.h"
 
 class Nes
 {

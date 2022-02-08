@@ -55,7 +55,7 @@ private:
 	uint8 cycles;// Number of cycles to execute
 	uint8 opcode;// Opcode being executed
 
-	// Use of a struct with function pointers to handle the different modes and opcodes.
+	// Use of a struct with function pointers to handle the different addressing modes and opcodes.
 	struct
 	{
 		std::string opcodeName;
@@ -476,6 +476,7 @@ private:
 	void TYA();
 
 	void XXX();//unknown opcode
+
 
 	void branchingSubFunction();
 	void compareSubFunction(const uint8& param);
