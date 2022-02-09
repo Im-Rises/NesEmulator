@@ -3,10 +3,18 @@
 #include <iostream>
 #include "Bus.h"
 
+/// <summary>
+/// - May have issue with status.reg that is not correct (need to implement the unused bit that is always at 1, in particular when its value is pushed to the stack)
+/// - Verify some opcodes, the status may be wrong (look at the "?" from the 19th commit)
+/// - Cycles in reset may be wrong (6 or 8)
+/// - Carry bit of compare instructions
+/// </summary>
+
 Cpu::Cpu()
 {
 	pc.reg = 0;
 	status.reg = 0;
+	status.U = 1;
 	sp = 0;
 	A = X = Y = 0;
 
@@ -35,7 +43,7 @@ void Cpu::clock()
 	cycles--;
 }
 
-void Cpu::reset()//?
+void Cpu::reset()
 {
 	pc.lo = read(0xFFFC);
 	pc.hi = read(0xFFFD);
@@ -43,6 +51,7 @@ void Cpu::reset()//?
 	A = X = Y = 0;
 	sp = 0xFD;
 	status.reg = 0;
+	status.U = 1;
 
 	//Set emulation variables
 	absoluteAddress = 0;
@@ -50,31 +59,21 @@ void Cpu::reset()//?
 	fetched = 0;
 	opcode = 0;
 
-	cycles = 8;//cycles = 6
+	cycles = 8;//cycles = 6//?
 }
 
-void Cpu::irq()//?
+void Cpu::irq()
 {
 	if (!status.I)
 	{
-		pushPcToStack();
-		status.B = 0;
-		status.I = 1;
-		write(0x100 + sp--, status.reg);
-		pc.lo = read(0xFFFF);
-		pc.hi = read(0xFFFF);
+		interruptSubFunction();
 		cycles = 7;
 	}
 }
 
-void Cpu::nmi()//?
+void Cpu::nmi()
 {
-	pushPcToStack();
-	status.B = 0;
-	status.I = 1;
-	write(0x100 + sp--, status.reg);
-	pc.lo = read(0xFFFF);
-	pc.hi = read(0xFFFF);
+	interruptSubFunction();
 	cycles = 8;
 }
 
@@ -308,10 +307,10 @@ void Cpu::BPL()
 		branchingSubFunction();
 	}
 }
-void Cpu::BRK()//?
+void Cpu::BRK()
 {
-	pc.reg++;
 	// BRK appears to push data on the stack
+	pc.reg++;
 	status.I = 1;
 	pushPcToStack();
 	status.B = 1;
@@ -477,7 +476,7 @@ void Cpu::PHA()
 
 void Cpu::PHP()
 {
-	write(0x0100 + sp--, status.reg);//?
+	write(0x0100 + sp--, status.reg);
 }
 
 void Cpu::PLA()
@@ -486,9 +485,10 @@ void Cpu::PLA()
 	status.Z = (A == 0);
 	status.N = (A & 0x80);
 }
-void Cpu::PLP()//?
+void Cpu::PLP()
 {
 	status.reg = read(++sp + 0x100);
+	status.U = 1;
 }
 
 void Cpu::ROL()
@@ -509,19 +509,20 @@ void Cpu::ROR()
 	status.N = (temp & 0x80);
 	updateFetched(temp);
 }
-void Cpu::RTI()//?
+void Cpu::RTI()
 {
 	status.reg = read(++sp + 0x100);
+	status.U = 1;
 	status.B = 0;
 	pc.lo = read(++sp + 0x100);
 	pc.hi = read(++sp + 0x100);
 }
 
-void Cpu::RTS()//?
+void Cpu::RTS()
 {
 	pc.lo = read(++sp + 0x100);
 	pc.hi = read(++sp + 0x100);
-	//pc.reg++;
+	pc.reg++;
 }
 
 void Cpu::SBC()
@@ -644,4 +645,14 @@ void Cpu::pushPcToStack()
 {
 	write(0x0100 + sp--, pc.hi);
 	write(0x0100 + sp--, pc.lo);
+}
+
+void Cpu::interruptSubFunction()
+{
+	pushPcToStack();
+	status.B = 0;
+	status.I = 1;
+	write(0x100 + sp--, status.reg);
+	pc.lo = read(0xFFFE);
+	pc.hi = read(0xFFFF);
 }

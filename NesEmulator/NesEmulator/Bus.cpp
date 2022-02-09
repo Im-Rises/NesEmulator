@@ -35,7 +35,7 @@ void Bus::write(const uint16& address, const uint8& data)
 	if (0 <= address && address < 0x2000)//Write to ram (Mmu)
 		mmu->write(address, data);
 	else if (0x2000 <= address && address < 0x4000)//Write to ppu
-		ppu->write(address, data);
+		ppu->writePpu(address, data);
 	else//Write to cartridge
 		cartridge->writePrg(address, data);
 }

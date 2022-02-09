@@ -30,7 +30,7 @@ private:
 				I : 1,
 				D : 1,
 				B : 1,
-				: 1,	//Unused
+				U : 1,	//Unused
 				V : 1,
 				N : 1;
 		};
@@ -481,6 +481,7 @@ private:
 	void branchingSubFunction();
 	void compareSubFunction(const uint8& param);
 	void pushPcToStack();
+	void interruptSubFunction();
 };
 
 #endif

@@ -94,7 +94,7 @@ uint8 Ppu::readPpu(const uint16& address)
 	return 0;
 }
 
-void Ppu::write(const uint16& address, const uint8& data)
+void Ppu::writePpu(const uint16& address, const uint8& data)
 {
 	//address % 8
 }

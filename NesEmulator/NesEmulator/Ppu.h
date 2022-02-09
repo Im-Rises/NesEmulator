@@ -25,7 +25,7 @@ public:
 
 	//Read and write to Ppu
 	uint8 readPpu(const uint16& address);
-	void write(const uint16& address, const uint8& data);
+	void writePpu(const uint16& address, const uint8& data);
 
 
 	//// Main bus read/write
