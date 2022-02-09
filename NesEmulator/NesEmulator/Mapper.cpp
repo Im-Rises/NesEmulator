@@ -1,12 +1,12 @@
 #include "Mapper.h"
 
-Mapper::Mapper(const uint8& nbrPrgBanks, const uint8& nbrChrbanks)
+Mapper::Mapper(const uint8& nbrPrgBanks, const uint8& nbrChrBanks)
 {
 	this->nbrPrgBanks = nbrPrgBanks;
-	this->nbrChrbanks = nbrChrbanks;
+	this->nbrChrBanks = nbrChrBanks;
 }
 
-uint32 Mapper::getMappedAddress() const 
-{
-	return mappedAddress;
-}
+//uint32 Mapper::getMappedAddress() const 
+//{
+//	return mappedAddress;
+//}

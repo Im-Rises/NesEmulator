@@ -42,5 +42,21 @@ uint8 PpuBus::read(const uint16& address)
 
 void PpuBus::write(const uint16& address, const uint8& data)
 {
-	//
+	if (0 <= address && address < 0x2000)
+	{
+		cartridge->writeChr(address, data);
+	}
+	else if (0x2000 <= address && address < 0x3F00)
+	{
+		nameTable[address % 0x800] = data;
+	}
+	else if (0x3F00 <= address && address < 0x4000)
+	{
+		palette[address - 0x4000] = data;
+	}
+	else
+	{
+		return;
+		//?
+	}
 }

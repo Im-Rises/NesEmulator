@@ -78,7 +78,29 @@ uint8 Ppu::readPpu(const uint16& address)
 
 void Ppu::writePpu(const uint16& address, const uint8& data)
 {
-	//address % 8
+	switch (address % 8)
+	{
+	case(0x0000):
+		break;
+	case(0x0001):
+		break;
+	case(0x0002):
+		break;
+	case(0x0003):
+		break;
+	case(0x0004):
+		break;
+	case(0x0005):
+		break;
+	case(0x0006):
+		break;
+	case(0x0007):
+		break;
+	default:
+		break;
+	}
+
+	return;
 }
 
 

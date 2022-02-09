@@ -27,26 +27,27 @@ Cartridge::Cartridge(const std::string& romPath)
 		{
 
 		}
-
-		if (fileFormat == 1)
+		else if (fileFormat == 1)
 		{
 			//Issue
 			// A sub-expression may overflow before being assigned to a wider type if writting:
 			//- chrMemory.resize(header.prgRomSize * 0x4000);
 			//- chrMemory.resize(header.chrRomSize * 0x2000);
+			// I used the auto keywoad to be sure the temp variable can contain the max size of the rom
+			// A sub expression may overflow before being assigned to a wider type.
 
 			//vector.data() returns a direct pointer to the memory array used internally by the vector
 			//By sending the pointer, we can directly modify it
-			auto temp1 = header.prgRomSize * 0x4000;
-			prgMemory.resize(temp1);//Size by 16KB, 32KB
+
+			auto prgSize = header.nbrPrgBanks * 0x4000;
+			prgMemory.resize(prgSize);//Size by 16KB, 32KB
 			input.read((char*)prgMemory.data(), sizeof(prgMemory));
 
-			auto temp2 = header.chrRomSize * 0x2000;
-			chrMemory.resize(temp2);//Size by 8KB, 16KB
+			auto chrSize = header.nbrChrBanks * 0x2000;
+			chrMemory.resize(chrSize);//Size by 8KB, 16KB
 			input.read((char*)chrMemory.data(), sizeof(chrMemory));
 		}
-
-		if (fileFormat == 2)
+		else if (fileFormat == 2)
 		{
 
 		}
@@ -56,7 +57,7 @@ Cartridge::Cartridge(const std::string& romPath)
 		{
 		case(0):
 		{
-			mapperPtr = std::make_shared<Mapper000>(header.prgRomSize, header.chrRomSize);
+			mapperPtr = std::make_shared<Mapper000>(header.nbrPrgBanks, header.nbrChrBanks);
 			break;
 		}
 		default:
@@ -86,37 +87,47 @@ void Cartridge::connectToPpuBus(PpuBus* ppuBus)
 }
 
 
+/// <summary>
+/// RESUME HERE
+/// Issue understanding the Cartridge and Mappers
+/// Does it work like the GameBoy, when we write to the rom it change the current ram/rom bank or is it different ?
+/// It seems to work when we write and read to the cartridge.
+/// </summary>
+/// <param name="address"></param>
+/// <returns></returns>
+
 uint8 Cartridge::readPrg(const uint16& address)
 {
-	if (mapperPtr->readPrg(address))
-	{
-		return prgMemory[mapperPtr->getMappedAddress()];
-	}
-	return 0;//Issue ?
+
+	//if (mapperPtr->readPrg(address))
+	//{
+	//return prgMemory[mapperPtr->getMappedAddress()];
+	//}
+	//return 0;//Issue ?
 }
 
 void Cartridge::writePrg(const uint16& address, const uint8& data)
 {
-	if (mapperPtr->writePrg(address, data))
-	{
-		prgMemory[mapperPtr->getMappedAddress()] = data;//issue ?
-	}
+	//if (mapperPtr->writePrg(address, data))
+	//{
+	//prgMemory[mapperPtr->getMappedAddress()] = data;//issue ?
+//}
 }
 
 
 uint8 Cartridge::readChr(const uint16& address)
 {
-	if (mapperPtr->readChr(address))
-	{
-		return chrMemory[mapperPtr->getMappedAddress()];
-	}
-	return 0;//issue ?
+	//if (mapperPtr->readChr(address))
+	//{
+	//return chrMemory[mapperPtr->getMappedAddress()];
+	//}
+	//return 0;//issue ?
 }
 
 void Cartridge::writeChr(const uint16& address, const uint8& data)
 {
-	if (mapperPtr->writeChr(address, data))
-	{
-		chrMemory[mapperPtr->getMappedAddress()] = data;//issue ?
-	}
+	//if (mapperPtr->writeChr(address, data))
+	//{
+	//chrMemory[mapperPtr->getMappedAddress()] = data;//issue ?
+//}
 }

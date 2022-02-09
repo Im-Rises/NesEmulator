@@ -30,10 +30,16 @@ private:
 	Bus bus;// main bus
 	PpuBus ppuBus;// ppu bus
 
+	int cyclesCounter;
+
 public:
 	static Nes* getInstance(const std::string romPath);
 	void start();
-	void insertCartridge(const std::string& romPath);
+	void reset();
+	//void insertCartridge(const std::string& romPath);
+
+private:
+	void clock();
 
 };
 

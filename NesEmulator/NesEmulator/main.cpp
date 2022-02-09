@@ -2,6 +2,14 @@
 
 #include "Nes.h"
 
+/// <summary>
+/// Errors : 
+/// 1 - Target rom not found
+/// </summary>
+/// <param name="argc"></param>
+/// <param name="argv"></param>
+/// <returns></returns>
+
 int main(int argc, char* argv[])
 {
 	std::cout << PROJECT_NAME << " " << VER << " by " << AUTHOR << std::endl;

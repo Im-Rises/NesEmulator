@@ -13,11 +13,11 @@ private:
 public:
 	Mapper000(const uint8& nbrPrgBanks, const uint8& nbrChrbanks);
 
-	bool readPrg(const uint16& address) override;
-	bool writePrg(const uint16& address, const uint8& data) override;
+	uint32 readPrg(const uint16& address) override;
+	void writePrg(const uint16& address, const uint8& data) override;
 
-	bool readChr(const uint16& address) override;
-	bool writeChr(const uint16& address, const uint8& data) override;
+	uint32 readChr(const uint16& address) override;
+	void writeChr(const uint16& address, const uint8& data) override;
 };
 
 #endif // !DEF_MAPPER000

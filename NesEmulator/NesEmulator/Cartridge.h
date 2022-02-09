@@ -13,17 +13,18 @@ class Mapper;
 class Cartridge
 {
 private:
+	// Program and character's size may be different depending of the cartridge. So I use vector to size it depending of the rom/mapper etc... 
 	std::vector<uint8> prgMemory;
 	std::vector<uint8> chrMemory;
 
-	std::shared_ptr<Mapper> mapperPtr;// Allow us to be sure of deleting the mapper
+	std::shared_ptr<Mapper> mapperPtr;// Allow us to delete the mapper and deallocate the memory.
 
 	// Header is the 16 first bytes of the rom
 	struct
 	{
 		char gameName[4];
-		uint8 prgRomSize;
-		uint8 chrRomSize;
+		uint8 nbrPrgBanks;// Number of rom banks
+		uint8 nbrChrBanks;// Number of chr banks
 		uint8 mapper1;
 		uint8 mapper2;
 		uint8 ramSize;
@@ -32,7 +33,11 @@ private:
 		char unused[5];
 	}header;
 
-	uint8 mapperId;
+	uint8 mapperId;// There is 255 mappers possible
+
+	// Useless, already present in the structure "header"
+	//uint8 prgBanks;
+	//uint8 chrBanks;
 
 	Bus* bus = nullptr;
 	PpuBus* ppuBus = nullptr;
@@ -42,12 +47,12 @@ public:
 
 	void connectToBus(Bus* bus);//Main bus connection
 	void connectToPpuBus(PpuBus* ppuBus);//PpuBus connection
-
-	// Read and write for the Main bus
+	
+	// Read and write for the Main bus (read/write from CPU)
 	uint8 readPrg(const uint16& address);
 	void writePrg(const uint16& address, const uint8& data);
 
-	// Read and write for the PpuBus
+	// Read and write for the PpuBus (read/write from PPU)
 	uint8 readChr(const uint16& address);
 	void writeChr(const uint16& address, const uint8& data);
 };
