@@ -39,12 +39,15 @@ private:
 
 public:
 	Cartridge(const std::string& romPath);
+
 	void connectToBus(Bus* bus);//Main bus connection
 	void connectToPpuBus(PpuBus* ppuBus);//PpuBus connection
 
+	// Read and write for the Main bus
 	uint8 readPrg(const uint16& address);
 	void writePrg(const uint16& address, const uint8& data);
 
+	// Read and write for the PpuBus
 	uint8 readChr(const uint16& address);
 	void writeChr(const uint16& address, const uint8& data);
 };

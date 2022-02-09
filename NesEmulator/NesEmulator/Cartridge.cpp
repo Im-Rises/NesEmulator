@@ -92,14 +92,14 @@ uint8 Cartridge::readPrg(const uint16& address)
 	{
 		return prgMemory[mapperPtr->getMappedAddress()];
 	}
-	return 0;
+	return 0;//Issue ?
 }
 
 void Cartridge::writePrg(const uint16& address, const uint8& data)
 {
 	if (mapperPtr->writePrg(address, data))
 	{
-		prgMemory[mapperPtr->getMappedAddress()] = data;
+		prgMemory[mapperPtr->getMappedAddress()] = data;//issue ?
 	}
 }
 
@@ -110,13 +110,13 @@ uint8 Cartridge::readChr(const uint16& address)
 	{
 		return chrMemory[mapperPtr->getMappedAddress()];
 	}
-	return 0;
+	return 0;//issue ?
 }
 
 void Cartridge::writeChr(const uint16& address, const uint8& data)
 {
 	if (mapperPtr->writeChr(address, data))
 	{
-		chrMemory[mapperPtr->getMappedAddress()] = data;
+		chrMemory[mapperPtr->getMappedAddress()] = data;//issue ?
 	}
 }

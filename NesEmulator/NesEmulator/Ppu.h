@@ -23,18 +23,13 @@ public:
 	void connectToBus(Bus* bus);//Main bus connection
 	void connectToPpuBus(PpuBus* ppuBus);//PpuBus connection
 
-	//Read and write to Ppu
+	//Cpu read and write to the registers of the Ppu
 	uint8 readPpu(const uint16& address);
 	void writePpu(const uint16& address, const uint8& data);
 
-
-	//// Main bus read/write
-	//uint8 readCpuBus(const uint16& address);
-	//void writeCpuBus(const uint16& address, const uint8& data);
-
-	//// Ppu bus read/write
-	//uint8 readCpuBus(const uint16& address);
-	//void writeCpuBus(const uint16& address, const uint8& data);
+	// Ppu bus read/write
+	uint8 readPpuBus(const uint16& address);
+	void writePpuBus(const uint16& address, const uint8& data);
 
 };
 

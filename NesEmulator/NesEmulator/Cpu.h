@@ -30,7 +30,7 @@ private:
 				I : 1,
 				D : 1,
 				B : 1,
-				U : 1,	//Unused
+				U : 1,	//Unused (supposed to be always at 1)
 				V : 1,
 				N : 1;
 		};

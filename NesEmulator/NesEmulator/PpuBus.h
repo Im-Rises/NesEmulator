@@ -20,6 +20,7 @@ public:
 	PpuBus(Ppu* ppu, Cartridge* cartridge);
 
 	uint8 read(const uint16& address);
+	void write(const uint16& address, const uint8& data);
 
 };
 

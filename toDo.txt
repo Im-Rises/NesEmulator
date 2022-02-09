@@ -1,2 +1,2 @@
 Cpu:
-Correct all the functions with the indication <?>
+Information written in the Cpu.cpp file.
