@@ -16,13 +16,15 @@ Cartridge::Cartridge(const std::string& romPath)
 		//Casting the structure address as a char array 
 		input.read((char*)&header, sizeof(header));// Populate the header struct
 
+		//the next 512 bytes are used for trainer area, we're not interested in copying it
 		if (header.mapper1 & 0x04)
-			input.seekg(512, std::ios_base::cur);//Move cursor 512 byts away from current position
+			input.seekg(512, std::ios_base::cur);//Move cursor 512 bytes away from current position
 
 		mapperId = (header.mapper1 >> 4) | (header.mapper2 & 0xF0);
 
 		uint8 fileFormat = 1;
 
+		//Depending of the Ines file we get the data differently. For the moment I only implemented the fileFormat 1.
 		if (fileFormat == 0)
 		{
 
@@ -40,16 +42,20 @@ Cartridge::Cartridge(const std::string& romPath)
 			//By sending the pointer, we can directly modify it
 
 			auto prgSize = header.nbrPrgBanks * 0x4000;
-			prgMemory.resize(prgSize);//Size by 16KB, 32KB
-			input.read((char*)prgMemory.data(), sizeof(prgMemory));
+			prgMemory.resize(prgSize);//Define size of vector (size by 16KB, 32KB)
+			input.read((char*)prgMemory.data(), sizeof(prgMemory));//Copy rom into vector
 
 			auto chrSize = header.nbrChrBanks * 0x2000;
-			chrMemory.resize(chrSize);//Size by 8KB, 16KB
-			input.read((char*)chrMemory.data(), sizeof(chrMemory));
+			chrMemory.resize(chrSize);//Define size of vector (size by 8KB, 16KB)
+			input.read((char*)chrMemory.data(), sizeof(chrMemory));//Copy rom into vector
 		}
 		else if (fileFormat == 2)
 		{
 
+		}
+		else
+		{
+			//Unknown file format
 		}
 
 		//Make_shared is used for derived classes
@@ -63,6 +69,7 @@ Cartridge::Cartridge(const std::string& romPath)
 		default:
 		{
 			std::cout << "Unknown cartridge" << std::endl;
+			exit(2);
 			break;
 		}
 		}
@@ -88,46 +95,63 @@ void Cartridge::connectToPpuBus(PpuBus* ppuBus)
 
 
 /// <summary>
-/// RESUME HERE
 /// Issue understanding the Cartridge and Mappers
 /// Does it work like the GameBoy, when we write to the rom it change the current ram/rom bank or is it different ?
 /// It seems to work when we write and read to the cartridge.
+/// https://wiki.nesdev.org/w/index.php?title=Mapper
+/// https://wiki.nesdev.org/w/index.php/CPU_memory_map
+/// https://en.wikibooks.org/wiki/NES_Programming/Memory_Map
 /// </summary>
 /// <param name="address"></param>
 /// <returns></returns>
 
-uint8 Cartridge::readPrg(const uint16& address)
-{
+/// <summary>
+/// The main bus can read/write from different data in the cartridge (prg Rom, expansion rom and SRAM).
+/// On the contrary the PpuBus can only access the chr rom.
+/// This is why the read and write for the main bus implement other components.
+/// </summary>
+/// <param name="address"></param>
+/// <returns></returns>
 
-	//if (mapperPtr->readPrg(address))
-	//{
-	//return prgMemory[mapperPtr->getMappedAddress()];
-	//}
-	//return 0;//Issue ?
+uint8 Cartridge::readMainBus(const uint16& address)
+{
+	if (address < 0x6000)
+	{
+		return 0;//Access to cartridge expansion rom (not implemented)
+	}
+	else if (address < 0x8000)
+	{
+		return 0;//Access to SRAM (not implemented)
+	}
+	else
+	{
+		return prgMemory[mapperPtr->readPrg(address)];
+	}
 }
 
-void Cartridge::writePrg(const uint16& address, const uint8& data)
+void Cartridge::writeMainBus(const uint16& address, const uint8& data)
 {
-	//if (mapperPtr->writePrg(address, data))
-	//{
-	//prgMemory[mapperPtr->getMappedAddress()] = data;//issue ?
-//}
+	if (address < 0x6000)
+	{
+		return;//Access to cartridge expansion rom (not implemented)
+	}
+	else if (address < 0x8000)
+	{
+		return;//Access to SRAM (not implemented)
+	}
+	else
+	{
+		mapperPtr->writePrg(address, data);
+	}
 }
 
 
-uint8 Cartridge::readChr(const uint16& address)
+uint8 Cartridge::readPpuBus(const uint16& address)
 {
-	//if (mapperPtr->readChr(address))
-	//{
-	//return chrMemory[mapperPtr->getMappedAddress()];
-	//}
-	//return 0;//issue ?
+	return chrMemory[mapperPtr->readChr(address)];
 }
 
-void Cartridge::writeChr(const uint16& address, const uint8& data)
+void Cartridge::writePpuBus(const uint16& address, const uint8& data)
 {
-	//if (mapperPtr->writeChr(address, data))
-	//{
-	//chrMemory[mapperPtr->getMappedAddress()] = data;//issue ?
-//}
+	mapperPtr->writeChr(address, data);
 }

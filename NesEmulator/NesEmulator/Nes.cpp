@@ -4,7 +4,8 @@
 
 Nes* Nes::nesInstance = nullptr;
 
-Nes::Nes(const std::string romPath) :cartridge(romPath), bus(&cpu, &mmu, &cartridge, &ppu), ppuBus(&ppu, &cartridge)
+//Nes::Nes(const std::string romPath) :cartridge(romPath), bus(&cpu, &mmu, &cartridge, &ppu), ppuBus(&ppu, &cartridge)
+Nes::Nes(const std::string romPath) :cartridge(romPath), bus(&cpu, &cartridge, &ppu), ppuBus(&ppu, &cartridge)
 {
 	cyclesCounter = 0;
 }

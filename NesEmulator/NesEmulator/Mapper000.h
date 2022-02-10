@@ -4,7 +4,15 @@
 #include "Mapper.h"
 #include "binaryLib.h"
 
-//Inheritence needs to be public (public Mapper) to be visible by shared_ptr in cartridge
+/// <summary>
+/// https://wiki.nesdev.org/w/index.php?title=NROM
+/// Rom capacity : 16K or 32K (0x4000 to 0x8000) only one bank
+/// CHR capacity : 8K (0x2000) only one bank
+/// </summary>
+/// <param name="address"></param>
+/// <returns></returns>
+
+//Inheritence needs to be public "public Mapper" to be visible by shared_ptr in cartridge
 class Mapper000 : public Mapper
 {
 private:

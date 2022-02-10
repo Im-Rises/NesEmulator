@@ -17,12 +17,14 @@ class Bus
 {
 private:
 	Cpu* cpu = nullptr;
-	Mmu* mmu = nullptr;
+	//Mmu* mmu = nullptr;
 	Cartridge* cartridge = nullptr;
 	Ppu* ppu = nullptr;
+	uint8 memory[0x800];
 
 public:
-	Bus(Cpu* cpu, Mmu* mmu, Cartridge* cartridge, Ppu* ppu);
+	//Bus(Cpu* cpu, Mmu* mmu, Cartridge* cartridge, Ppu* ppu);
+	Bus(Cpu* cpu, Cartridge* cartridge, Ppu* ppu);
 	uint8 read(const uint16& address);
 	void write(const uint16& address, const uint8& data);
 };

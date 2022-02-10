@@ -3,6 +3,10 @@
 
 #include "binaryLib.h"
 
+/// <summary>
+/// Class may be useless
+/// </summary>
+
 class Bus;
 
 class Mmu

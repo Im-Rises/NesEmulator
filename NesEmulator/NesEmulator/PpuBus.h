@@ -6,6 +6,10 @@
 class Ppu;
 class Cartridge;
 
+/// <summary>
+/// Create class for the two arrays ? 
+/// </summary>
+
 class PpuBus
 {
 private:

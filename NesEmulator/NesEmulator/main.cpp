@@ -5,6 +5,7 @@
 /// <summary>
 /// Errors : 
 /// 1 - Target rom not found
+/// 2 - Unknown cartridge (mapper not implemented)
 /// </summary>
 /// <param name="argc"></param>
 /// <param name="argv"></param>

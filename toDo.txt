@@ -1,2 +1,5 @@
 Cpu:
 Information written in the Cpu.cpp file.
+
+Mmu:
+Maybe this class is useless, the same class is written in the PpuBus directly.

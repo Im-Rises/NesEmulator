@@ -49,7 +49,7 @@ void Ppu::connectToPpuBus(PpuBus* ppuBus)
 }
 
 // Main bus read/write
-uint8 Ppu::readPpu(const uint16& address)
+uint8 Ppu::readPpuRegister(const uint16& address)
 {
 	switch (address % 8)
 	{
@@ -76,7 +76,7 @@ uint8 Ppu::readPpu(const uint16& address)
 	return 0;
 }
 
-void Ppu::writePpu(const uint16& address, const uint8& data)
+void Ppu::writePpuRegister(const uint16& address, const uint8& data)
 {
 	switch (address % 8)
 	{

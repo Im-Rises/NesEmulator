@@ -22,7 +22,7 @@ private:
 
 	Cpu cpu;	
 	Cartridge cartridge;
-	Mmu mmu;
+	//Mmu mmu;
 	Ppu ppu;
 	//Apu apu;
 	//Joypad joypad;

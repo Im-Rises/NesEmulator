@@ -3,6 +3,12 @@
 #include "Ppu.h"
 #include "Cartridge.h"
 
+/// <summary>
+/// https://en.wikibooks.org/wiki/NES_Programming/Memory_Map
+/// </summary>
+/// <param name="ppu"></param>
+/// <param name="cartridge"></param>
+
 PpuBus::PpuBus(Ppu* ppu, Cartridge* cartridge)
 {
 	// Only the PPU can read and write to the ppuBus
@@ -23,15 +29,15 @@ uint8 PpuBus::read(const uint16& address)
 {
 	if (0 <= address && address < 0x2000)
 	{
-		return cartridge->readChr(address);
+		return cartridge->readPpuBus(address);
 	}
 	else if (0x2000 <= address && address < 0x3F00)
 	{
-		return nameTable[address % 0x800];
+		return nameTable[(address - 0x2000) % 0x800];//Or (address % 0x800)
 	}
 	else if (0x3F00 <= address && address < 0x4000)
 	{
-		return palette[address - 0x4000];
+		return palette[address - 0x3F00];
 	}
 	else
 	{
@@ -44,7 +50,7 @@ void PpuBus::write(const uint16& address, const uint8& data)
 {
 	if (0 <= address && address < 0x2000)
 	{
-		cartridge->writeChr(address, data);
+		cartridge->writePpuBus(address, data);
 	}
 	else if (0x2000 <= address && address < 0x3F00)
 	{

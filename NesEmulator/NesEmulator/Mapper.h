@@ -14,8 +14,6 @@ protected:
 	uint8 nbrPrgBanks;
 	uint8 nbrChrBanks;
 
-	uint32 mappedAddress = 0;
-
 public:
 	Mapper(const uint8& nbrPrgBanks, const uint8& nbrChrBanks);
 
@@ -31,8 +29,6 @@ public:
 
 	virtual uint32 readChr(const uint16& address) = 0;
 	virtual void writeChr(const uint16& address, const uint8& data) = 0;
-
-	//uint32 getMappedAddress() const;
 };
 
 #endif // !DEF_MAPPER

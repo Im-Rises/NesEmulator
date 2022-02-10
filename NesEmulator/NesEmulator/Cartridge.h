@@ -33,7 +33,7 @@ private:
 		char unused[5];
 	}header;
 
-	uint8 mapperId;// There is 255 mappers possible
+	uint16 mapperId;
 
 	// Useless, already present in the structure "header"
 	//uint8 prgBanks;
@@ -49,12 +49,12 @@ public:
 	void connectToPpuBus(PpuBus* ppuBus);//PpuBus connection
 	
 	// Read and write for the Main bus (read/write from CPU)
-	uint8 readPrg(const uint16& address);
-	void writePrg(const uint16& address, const uint8& data);
+	uint8 readMainBus(const uint16& address);
+	void writeMainBus(const uint16& address, const uint8& data);
 
 	// Read and write for the PpuBus (read/write from PPU)
-	uint8 readChr(const uint16& address);
-	void writeChr(const uint16& address, const uint8& data);
+	uint8 readPpuBus(const uint16& address);
+	void writePpuBus(const uint16& address, const uint8& data);
 };
 
 #endif
