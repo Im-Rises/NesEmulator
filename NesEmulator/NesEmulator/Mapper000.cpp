@@ -14,7 +14,7 @@ Mapper000::Mapper000(const uint8& nbrPrgBanks, const uint8& nbrChrbanks) : Mappe
 uint32 Mapper000::readPrg(const uint16& address)
 {
 	//return address & ((nbrPrgBanks > 1) ? 0x8000 : 0x4000);
-
+	return 0;
 }
 
 void Mapper000::writePrg(const uint16& address, const uint8& data)

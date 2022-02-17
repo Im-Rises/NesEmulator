@@ -8,6 +8,7 @@
 
 Ppu::Ppu()
 {
+	scanLine = 0;
 	//if (SDL_Init(SDL_INIT_VIDEO) != 0)
 	//{
 	//	std::cout << "Error SDL video init.\n" << SDL_GetError() << std::endl;

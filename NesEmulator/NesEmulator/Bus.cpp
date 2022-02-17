@@ -14,7 +14,7 @@
 /// <param name="ppu"></param>
 
 //Bus::Bus(Cpu* cpu, Mmu* mmu, Cartridge* cartridge, Ppu* ppu)
-Bus::Bus(Cpu* cpu, Cartridge* cartridge, Ppu* ppu)
+Bus::Bus(Cpu* cpu, Cartridge* cartridge, Ppu* ppu) : memory{}//Init all array to 0
 {
 	// Only the CPU can read and write to the main bus
 	this->cpu = cpu;
@@ -22,8 +22,8 @@ Bus::Bus(Cpu* cpu, Cartridge* cartridge, Ppu* ppu)
 
 	//this->mmu = mmu;
 	//this->mmu->connectToBus(this);
-	for (uint8& i : memory)
-		i = 0;
+	//for (uint8& i : memory)
+	//	i = 0;
 
 	this->cartridge = cartridge;
 	//this->cartridge->connectToBus(this);

@@ -3,11 +3,11 @@
 #include <iostream>
 #include "Bus.h"
 
-Mmu::Mmu()
+Mmu::Mmu() :memory{}
 {
 	//memset(memory, 0, 0xFFFF);
-	for (uint8& i : memory)
-		i = 0;
+	//for (uint8& i : memory)
+	//	i = 0;
 }
 
 void Mmu::connectToBus(Bus* bus)

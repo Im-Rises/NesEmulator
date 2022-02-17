@@ -9,7 +9,7 @@
 /// <param name="ppu"></param>
 /// <param name="cartridge"></param>
 
-PpuBus::PpuBus(Ppu* ppu, Cartridge* cartridge)
+PpuBus::PpuBus(Ppu* ppu, Cartridge* cartridge) : palette{}, nameTable{}
 {
 	// Only the PPU can read and write to the ppuBus
 	this->ppu = ppu;
@@ -18,11 +18,11 @@ PpuBus::PpuBus(Ppu* ppu, Cartridge* cartridge)
 	this->cartridge = cartridge;
 	//this->cartridge->connectToPpuBus(this);
 
-	for (uint8& i : palette)
-		i = 0;
+	//for (uint8& i : palette)
+	//	i = 0;
 
-	for (uint8& i : nameTable)
-		i = 0;
+	//for (uint8& i : nameTable)
+	//	i = 0;
 }
 
 uint8 PpuBus::read(const uint16& address)
