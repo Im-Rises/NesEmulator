@@ -1,5 +1,18 @@
 # NesEmulator
 
+NesEmulator made in C++ in current developpement.
+The source is provided with CMake files to compile the emulator for windows and linux.  
+<!-- 
+## Images
+
+## Video
+
+## Compilation
+
+## Start the emulator
+
+## Emulator controls -->
+
 ## Documentations
 
 Main documentation  
