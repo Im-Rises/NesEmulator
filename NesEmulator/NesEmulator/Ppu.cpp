@@ -4,7 +4,7 @@
 
 #include "Bus.h"
 #include "PpuBus.h"
-#include "SDL2/include/SDL.h"
+//#include "SDL2/include/SDL.h"
 
 Ppu::Ppu()
 {
