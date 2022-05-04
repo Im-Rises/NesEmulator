@@ -1,0 +1,2 @@
+#pragma code_page(65001)
+1 /* CREATEPROCESS_MANIFEST_RESOURCE_ID */ 24 /* RT_MANIFEST */ "E:/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/NesEmulator/out/build/x64-Debug/NesEmulator/CMakeFiles/NesEmulator.dir/embed.manifest"
