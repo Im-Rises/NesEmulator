@@ -3,7 +3,7 @@ name: CMake
 on:
   pull_request:
     branches: [ main ]
-    types: [ closed ]
+#     types: [ closed ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
