@@ -1,0 +1,27 @@
+# ninja log v5
+17	277	6654593174446244	NesEmulator/CMakeFiles/NesEmulator.dir/Joypad.cpp.obj	b017c66a9dc988cb
+12	290	6654593174506243	NesEmulator/CMakeFiles/NesEmulator.dir/Apu.cpp.obj	66e3ed58b25a52e8
+1	252	6667979082345125	NesEmulator/CMakeFiles/NesEmulator.dir/Bus.cpp.obj	1ac625baa10d4f98
+6	291	6654593174566257	NesEmulator/CMakeFiles/NesEmulator.dir/binaryLib.cpp.obj	a2f1a226b71ba3b6
+0	785	6668000323562709	NesEmulator/CMakeFiles/NesEmulator.dir/Ppu.cpp.obj	e07c3f82c6a1e0e
+1	262	6667984537274771	NesEmulator/CMakeFiles/NesEmulator.dir/PpuBus.cpp.obj	25f940b69f4fadbb
+5	375	6667984538404771	NesEmulator/CMakeFiles/NesEmulator.dir/Mmu.cpp.obj	5d615998bed4b9ba
+2	374	6667978706210812	NesEmulator/CMakeFiles/NesEmulator.dir/Nes.cpp.obj	7cb9feeccc22ef75
+4	535	6667978707800796	NesEmulator/CMakeFiles/NesEmulator.dir/main.cpp.obj	6b4c2aceb462a130
+7	624	6667978708690781	NesEmulator/CMakeFiles/NesEmulator.dir/Cpu.cpp.obj	1b67ce89209fd3ab
+16	551	6662179798349325	NesEmulator/CMakeFiles/NesEmulator.dir/Mapper.cpp.obj	55c1c3f4c936b7
+13	574	6667978708210819	NesEmulator/CMakeFiles/NesEmulator.dir/Cartridge.cpp.obj	abdfd5ea37a05e83
+785	910	6668000324602736	NesEmulator/NesEmulator.exe	6fd28054b7c30348
+0	37	6667986447512841	NesEmulator/CMakeFiles/NesEmulator.dir/Mapper000.cpp.obj	beb7d436dd1a719d
+9	705	6732338758099176	NesEmulator/CMakeFiles/NesEmulator.dir/binaryLib.cpp.obj	a2f1a226b71ba3b6
+33	706	6732338758099176	NesEmulator/CMakeFiles/NesEmulator.dir/Mapper.cpp.obj	55c1c3f4c936b7
+37	707	6732338758099176	NesEmulator/CMakeFiles/NesEmulator.dir/Mapper000.cpp.obj	beb7d436dd1a719d
+20	779	6732338758859172	NesEmulator/CMakeFiles/NesEmulator.dir/PpuBus.cpp.obj	25f940b69f4fadbb
+6	824	6732338759319163	NesEmulator/CMakeFiles/NesEmulator.dir/Bus.cpp.obj	1ac625baa10d4f98
+1	837	6732338759439154	NesEmulator/CMakeFiles/NesEmulator.dir/Nes.cpp.obj	7cb9feeccc22ef75
+31	916	6732338760239172	NesEmulator/CMakeFiles/NesEmulator.dir/Mmu.cpp.obj	5d615998bed4b9ba
+13	1008	6732338761129163	NesEmulator/CMakeFiles/NesEmulator.dir/main.cpp.obj	6b4c2aceb462a130
+27	1021	6732338761289148	NesEmulator/CMakeFiles/NesEmulator.dir/Cartridge.cpp.obj	abdfd5ea37a05e83
+24	1092	6732338761979145	NesEmulator/CMakeFiles/NesEmulator.dir/Cpu.cpp.obj	1b67ce89209fd3ab
+1	353	6732338850817674	NesEmulator/CMakeFiles/NesEmulator.dir/Ppu.cpp.obj	e07c3f82c6a1e0e
+353	600	6732338852900232	NesEmulator/NesEmulator.exe	32850ac5242678dd
