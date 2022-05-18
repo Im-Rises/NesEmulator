@@ -1,8 +1,8 @@
-# Install script for directory: /mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/NesEmulator
+# Install script for directory: /mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/NesEmulator/out/install/WSL-GCC-Debug")
+  set(CMAKE_INSTALL_PREFIX "/mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/out/install/WSL-GCC-Debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -44,7 +44,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/NesEmulator/out/build/WSL-GCC-Debug/NesEmulator/cmake_install.cmake")
+  include("/mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/out/build/WSL-GCC-Debug/NesEmulator/cmake_install.cmake")
 
 endif()
 
@@ -56,5 +56,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/NesEmulator/out/build/WSL-GCC-Debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/out/build/WSL-GCC-Debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

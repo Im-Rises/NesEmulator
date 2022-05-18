@@ -42,7 +42,7 @@ rule CXX_EXECUTABLE_LINKER__NesEmulator_Debug
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /home/quentinubuntu/.vs/cmake/bin/cmake --regenerate-during-build -S/mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/NesEmulator -B/mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/NesEmulator/out/build/WSL-GCC-Debug
+  command = /home/quentinubuntu/.vs/cmake/bin/cmake --regenerate-during-build -S/mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator -B/mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/out/build/WSL-GCC-Debug
   description = Re-running CMake...
   generator = 1
 

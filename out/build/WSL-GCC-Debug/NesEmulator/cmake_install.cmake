@@ -1,8 +1,8 @@
-# Install script for directory: /mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/NesEmulator/NesEmulator
+# Install script for directory: /mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/NesEmulator
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/NesEmulator/out/install/WSL-GCC-Debug")
+  set(CMAKE_INSTALL_PREFIX "/mnt/e/Perso/Developpement/Programmes/Programmes/C++/NesEmulator/out/install/WSL-GCC-Debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

@@ -15,6 +15,13 @@ The source is provided with CMake files to compile the emulator for windows and 
 
 ## Emulator controls -->
 
+## SFML
+
+Follow this guide to install SFML on your distribution.
+<https://www.sfml-dev.org/tutorials/2.5/>
+
+v2.5.1
+
 ## To do
 
 Updated workflow.
