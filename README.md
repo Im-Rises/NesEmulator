@@ -20,7 +20,8 @@ The source is provided with CMake files to compile the emulator for windows and 
 Follow this guide to install SFML on your distribution.
 <https://www.sfml-dev.org/tutorials/2.5/>
 
-v2.5.1
+I compile the program with Visual Studio CMake compiler, so I downloaded the `Visual C++ 15 (2017) - 64-bit` v2.5.1.
+If you want to compile the app with Mingw, be sure to download the `GCC 7.3.0 MinGW (SEH) - 64-bit` v2.5.1.
 
 ## To do
 

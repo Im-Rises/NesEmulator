@@ -1,6 +1,7 @@
 # My gitignore files/folders
 
 out/
+[Ll]ibraries/
 
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudio,cmake
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,cmake
