@@ -1,0 +1,23 @@
+repo:
+- '*'
+
+CMakeLists:
+- 'NesEmulator/CMakeLists.txt'
+
+source:
+- 'NesEmulator'
+
+main:
+- 'NesEmulator/main.*'
+
+binarylib:
+- 'NesEmulator/binaryLib/*'
+
+video:
+- 'NesEmulator/Ppu.*'
+
+audio:
+- 'NesEmulator/Spu.*'
+
+controller:
+- 'NesEmulator/Joypad.*'
