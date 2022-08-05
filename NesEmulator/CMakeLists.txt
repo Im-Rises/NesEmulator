@@ -13,23 +13,6 @@ include_directories("${CMAKE_SOURCE_DIR}/NesEmulator/include")
 
 add_executable(${PROJECT_NAME} ${SRCS} ${HEADERS})
 
-# add SFML
 set(SFML_DIR "${CMAKE_SOURCE_DIR}/NesEmulator/lib/cmake/SFML")
 find_package(SFML REQUIRED COMPONENTS audio network graphics window system)
 target_link_libraries(${PROJECT_NAME} sfml-audio sfml-network sfml-graphics sfml-window sfml-system)
-
-
-#[[
-if(WIN32)
-	target_link_libraries(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/NesEmulator/lib/sfml-graphics.lib)
-	target_link_libraries(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/NesEmulator/lib/sfml-audio.lib)
-	target_link_libraries(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/NesEmulator/lib/sfml-network.lib)
-	target_link_libraries(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/NesEmulator/lib/sfml-system.lib)
-	target_link_libraries(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/NesEmulator/lib/sfml-window.lib)
-elseif(UNIX)
-	find_package(SFML 2.5 COMPONENTS graphics audio network system window REQUIRED)
-	target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics sfml-audio sfml-network sfml-system sfml-window)
-else()
-	message(FATAL_ERROR "OS not configured in CMakeLists.txt")
-endif()
-]]
