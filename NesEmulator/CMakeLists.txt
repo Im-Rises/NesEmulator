@@ -15,4 +15,4 @@ add_executable(${PROJECT_NAME} ${SRCS} ${HEADERS})
 
 set(SFML_DIR "${CMAKE_SOURCE_DIR}/NesEmulator/lib/cmake/SFML")
 find_package(SFML REQUIRED COMPONENTS audio network graphics window system)
-target_link_libraries(${PROJECT_NAME} sfml-audio sfml-network sfml-graphics sfml-window sfml-system)
+target_link_libraries(${PROJECT_NAME} sfml-audio sfml-network sfml-graphics sfml-window)
