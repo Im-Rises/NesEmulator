@@ -21,3 +21,6 @@ audio:
 
 controller:
 - 'NesEmulator/Joypad.*'
+
+readme:
+- 'README.md'
