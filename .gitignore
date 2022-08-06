@@ -1,5 +1,5 @@
 # My gitignore files/folders
-
+[tT]rash/
 *.vs/
 out/
 [Ll]ibraries/
