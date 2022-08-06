@@ -10,12 +10,16 @@ set(SRCS main.cpp binaryLib.cpp Nes.cpp Bus.cpp Cpu.cpp Ppu.cpp Apu.cpp Mmu.cpp 
 set(HEADERS binaryLib.h Nes.h Bus.h Cpu.h Ppu.h Apu.h Mmu.h Joypad.h Cartridge.h PpuBus.h Mapper.h Mapper000.h)
 
 include_directories("${CMAKE_SOURCE_DIR}/NesEmulator/include")
+if(WIN32)
+	set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/NesEmulator/lib/cmake")
+	set(SFML_DIR "${CMAKE_SOURCE_DIR}/NesEmulator/lib/cmake/SFML")
+	find_package(SFML REQUIRED COMPONENTS audio network graphics window system)
+elseif(UNIX)
+	find_package(SFML 2.5 COMPONENTS graphics audio network system window REQUIRED)
+endif()
 
 add_executable(${PROJECT_NAME} ${SRCS} ${HEADERS})
 
-# add SFML
-set(SFML_DIR "${CMAKE_SOURCE_DIR}/NesEmulator/lib/cmake/SFML")
-find_package(SFML REQUIRED COMPONENTS audio network graphics window system)
 target_link_libraries(${PROJECT_NAME} sfml-audio sfml-network sfml-graphics sfml-window sfml-system)
 
 
