@@ -3,6 +3,7 @@
 *.vs/
 out/
 [Ll]ibraries/
+[Dd]ocumentations/
 
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudio,cmake
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,cmake
