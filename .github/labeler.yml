@@ -21,3 +21,9 @@ audio:
 
 controller:
 - 'NesEmulator/Joypad.*'
+
+readme:
+- 'README.md'
+
+github-actions:
+- '.github/**/*.yml'
