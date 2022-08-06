@@ -24,3 +24,6 @@ controller:
 
 readme:
 - 'README.md'
+
+github-actions:
+- '.github/**/*.yml'
