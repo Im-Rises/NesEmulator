@@ -179,6 +179,7 @@ cmake .
 [![CMake](https://github.com/Im-Rises/NesEmulator/actions/workflows/cmake.yml/badge.svg?branch=main)](https://github.com/Im-Rises/NesEmulator/actions/workflows/cmake.yml)
 [![CodeQL](https://github.com/Im-Rises/NesEmulator/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/Im-Rises/NesEmulator/actions/workflows/codeql.yml)
 [![Microsoft C++ Code Analysis](https://github.com/Im-Rises/NesEmulator/actions/workflows/msvc.yml/badge.svg?branch=main)](https://github.com/Im-Rises/NesEmulator/actions/workflows/msvc.yml)
+[![Cpp Cmake Publish](https://github.com/Im-Rises/NesEmulator/actions/workflows/cpp-cmake-publish.yml/badge.svg?branch=main)](https://github.com/Im-Rises/NesEmulator/actions/workflows/cpp-cmake-publish.yml)
 
 The project is set with a set of different scripts:
 
@@ -186,6 +187,7 @@ The project is set with a set of different scripts:
 - cmake :
 - CodeQl :
 - Microsoft C++ Code Analysis :
+- Cpp Cmake Publish :
 
 ## Documentations
 
