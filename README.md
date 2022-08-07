@@ -184,7 +184,7 @@ cmake .
 The project is set with a set of different scripts:
 
 - flawfinder :
-- cmake :
+- CMake :
 - CodeQl :
 - Microsoft C++ Code Analysis :
 - Cpp Cmake Publish :
@@ -212,6 +212,9 @@ Opcodes detail:
 
 Memory map:  
 <https://en.wikibooks.org/wiki/NES_Programming/Memory_Map>
+
+Test roms:  
+<https://www.nesdev.org/wiki/Emulator_tests>  
 
 ## Contributors
 
