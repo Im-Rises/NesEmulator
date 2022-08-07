@@ -376,7 +376,7 @@ public:
 
 private:
 
-	uint8 read(const uint16& address)const;
+	uint8 read(const uint16& address) const;
 	void write(const uint16& address, const uint8& data);
 
 	void fetch();
@@ -482,6 +482,10 @@ private:
 	void compareSubFunction(const uint8& param);
 	void pushPcToStack();
 	void interruptSubFunction();
+
+public:
+	uint16 getPc();
+	void setPc(const uint16& value);
 };
 
 #endif

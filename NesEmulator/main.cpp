@@ -11,6 +11,14 @@
 /// <param name="argv"></param>
 /// <returns></returns>
 
+/// <summary>
+/// To Do list:
+/// - Correct rom loading into cartidge prgmemory not working
+/// </summary>
+/// <param name="argc"></param>
+/// <param name="argv"></param>
+/// <returns></returns>
+
 int main(int argc, char *argv[]) {
     std::cout << PROJECT_NAME << " " << VER << " by " << AUTHOR << std::endl;
 

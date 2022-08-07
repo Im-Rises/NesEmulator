@@ -113,7 +113,7 @@ void Cartridge::connectToPpuBus(PpuBus* ppuBus)
 /// <param name="address"></param>
 /// <returns></returns>
 
-uint8 Cartridge::readMainBus(const uint16& address)
+uint8 Cartridge::readMainBus(const uint16& address) const
 {
 	if (address < 0x6000)
 	{
@@ -146,7 +146,7 @@ void Cartridge::writeMainBus(const uint16& address, const uint8& data)
 }
 
 
-uint8 Cartridge::readPpuBus(const uint16& address)
+uint8 Cartridge::readPpuBus(const uint16& address) const
 {
 	return chrMemory[mapperPtr->readChr(address)];
 }

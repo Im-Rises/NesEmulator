@@ -25,7 +25,7 @@ private:
 public:
 	//Bus(Cpu* cpu, Mmu* mmu, Cartridge* cartridge, Ppu* ppu);
 	Bus(Cpu* cpu, Cartridge* cartridge, Ppu* ppu);
-	uint8 read(const uint16& address);
+	uint8 read(const uint16& address) const;
 	void write(const uint16& address, const uint8& data);
 };
 
