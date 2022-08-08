@@ -8,8 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Emulator source and header files
-set(SRCS main.cpp binaryLib.cpp Nes.cpp Bus.cpp Cpu.cpp Ppu.cpp Apu.cpp Mmu.cpp Joypad.cpp Cartridge.cpp PpuBus.cpp Mapper.cpp Mapper000.cpp)
-set(HEADERS binaryLib.h Nes.h Bus.h Cpu.h Ppu.h Apu.h Mmu.h Joypad.h Cartridge.h PpuBus.h Mapper.h Mapper000.h)
+set(SRCS "main.cpp" "binaryLib.cpp" "Nes.cpp" "Bus.cpp" "Cpu.cpp" "Ppu.cpp" "Apu.cpp" "Mmu.cpp" "Joypad.cpp" "Cartridge.cpp" "PpuBus.cpp" "Mapper.cpp" "Mapper000.cpp")
+set(HEADERS "binaryLib.h" "Nes.h" "Bus.h" "Cpu.h" "Ppu.h" "Apu.h" "Mmu.h" "Joypad.h" "Cartridge.h" "PpuBus.h" "Mapper.h" "Mapper000.h")
 
 # SFML components and linked libraries definition
 set(SFML_COMPONENTS audio network graphics window system)

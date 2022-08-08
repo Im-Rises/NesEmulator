@@ -13,7 +13,7 @@
 
 /// <summary>
 /// To Do list:
-/// - Correct rom loading into cartidge prgmemory not working
+/// - Re-implement mappers
 /// </summary>
 /// <param name="argc"></param>
 /// <param name="argv"></param>

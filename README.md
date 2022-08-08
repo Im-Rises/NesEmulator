@@ -173,6 +173,25 @@ cmake .
 
 ## Run tests
 
+The CPU good bahaviour has been tested with the `nestests.nes` test rom that you can find in the test_roms forlder.
+
+A CMake test is set up to directly test the prog. You can find it in the `test`folder and start it by typing the command below at the project root folder.
+
+```bash
+ctest
+```
+
+> **Note**
+> You need to compile the whole project before processing any tests.
+
+Test rom passed:
+
+[] nestest.nes
+[] nestest.nes
+[] nestest.nes
+[] nestest.nes
+[] nestest.nes
+
 ## Github-Actions
 
 [![flawfinder](https://github.com/Im-Rises/NesEmulator/actions/workflows/flawfinder.yml/badge.svg?branch=main)](https://github.com/Im-Rises/NesEmulator/actions/workflows/flawfinder.yml)
