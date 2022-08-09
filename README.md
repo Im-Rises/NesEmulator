@@ -8,7 +8,7 @@
 
 ## Description
 
-NesEmulator made in C++ in current development for windows, linux and macOS with SFML, Dear ImGui and GLFW.
+NesEmulator made in C++ in current development for windows, linux and macOS with SFML, Dear ImGui, GLFW and OpenGL 3.
 
 ## Features
 
