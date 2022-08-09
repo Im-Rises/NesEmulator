@@ -8,9 +8,17 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(SRCS "main.cpp" "NesEmuUi.cpp")
 set(HEADERS "NesEmuUi.h")
 
-set(SRCS_IMGUI "imgui/imconfig.h" "imgui/imgui.h" "imgui/imgui_interl.h" "imgui/imgui_rectpack.h" "imgui/imgui_textedit.h" "imgui/imgui_truetype.h" "imgui/impl_glfw.h")
-set(HEADERS_IMGUI "imgui/imgui.cpp" "imgui/imgui_draw.cpp" "imgui/imgui_tables.cpp" "imgui/imgui_widgets.cpp" "imgui/impl_glfw.cpp")
+include_directories("${CMAKE_SOURCE_DIR}/NesEmuUi/glfw/include")
+
+add_subdirectory("glfw")
+
+set(HEADERS_IMGUI "imgui/imconfig.h" "imgui/imgui.h" "imgui/imgui_internal.h" "imgui/imstb_rectpack.h" "imgui/imstb_textedit.h" "imgui/imstb_truetype.h" "imgui/imgui_impl_glfw.h")
+set(SRCS_IMGUI "imgui/imgui.cpp" "imgui/imgui_demo.cpp" "imgui/imgui_draw.cpp" "imgui/imgui_tables.cpp" "imgui/imgui_widgets.cpp" "imgui/imgui_impl_glfw.cpp")
+
+find_package(OpenGL REQUIRED)
 
 add_executable(NesEmuUi ${SRCS} ${SRCS_IMGUI} ${HEADERS} ${HEADERS_IMGUI})
 
-add_test (NesEmuUi NesEmuUi)
+target_link_libraries(NesEmuUi "glfw")
+
+target_link_libraries(NesEmuUi OpenGL::GL)
