@@ -1,0 +1,9 @@
+[submodule "NesEmuUi/glfw"]
+	path = NesEmuUi/glfw
+	url = https://github.com/glfw/glfw
+[submodule "NesEmuUi/imgui"]
+	path = NesEmuUi/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "NesEmulator/SFML"]
+	path = NesEmulator/SFML
+	url = https://github.com/SFML/SFML
