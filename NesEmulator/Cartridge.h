@@ -49,11 +49,11 @@ public:
 	void connectToPpuBus(PpuBus* ppuBus);//PpuBus connection
 	
 	// Read and write for the Main bus (read/write from CPU)
-	uint8 readMainBus(const uint16& address);
+	uint8 readMainBus(const uint16& address) const;
 	void writeMainBus(const uint16& address, const uint8& data);
 
 	// Read and write for the PpuBus (read/write from PPU)
-	uint8 readPpuBus(const uint16& address);
+	uint8 readPpuBus(const uint16& address) const;
 	void writePpuBus(const uint16& address, const uint8& data);
 };
 
