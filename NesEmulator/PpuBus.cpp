@@ -25,7 +25,7 @@ PpuBus::PpuBus(Ppu* ppu, Cartridge* cartridge) : palette{}, nameTable{}
 	//	i = 0;
 }
 
-uint8 PpuBus::read(const uint16& address)
+uint8 PpuBus::read(const uint16& address) const
 {
 	if (0 <= address && address < 0x2000)
 	{

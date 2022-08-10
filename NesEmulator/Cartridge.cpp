@@ -43,11 +43,11 @@ Cartridge::Cartridge(const std::string& romPath)
 
 			auto prgSize = header.nbrPrgBanks * 0x4000;
 			prgMemory.resize(prgSize);//Define size of vector (size by 16KB, 32KB)
-			input.read((char*)prgMemory.data(), sizeof(prgMemory));//Copy rom into vector
+			input.read((char*)prgMemory.data(), prgMemory.size());//Copy rom into vector
 
 			auto chrSize = header.nbrChrBanks * 0x2000;
 			chrMemory.resize(chrSize);//Define size of vector (size by 8KB, 16KB)
-			input.read((char*)chrMemory.data(), sizeof(chrMemory));//Copy rom into vector
+			input.read((char*)chrMemory.data(), chrMemory.size());//Copy rom into vector
 		}
 		else if (fileFormat == 2)
 		{
@@ -113,7 +113,7 @@ void Cartridge::connectToPpuBus(PpuBus* ppuBus)
 /// <param name="address"></param>
 /// <returns></returns>
 
-uint8 Cartridge::readMainBus(const uint16& address)
+uint8 Cartridge::readMainBus(const uint16& address) const
 {
 	if (address < 0x6000)
 	{
@@ -146,7 +146,7 @@ void Cartridge::writeMainBus(const uint16& address, const uint8& data)
 }
 
 
-uint8 Cartridge::readPpuBus(const uint16& address)
+uint8 Cartridge::readPpuBus(const uint16& address) const
 {
 	return chrMemory[mapperPtr->readChr(address)];
 }

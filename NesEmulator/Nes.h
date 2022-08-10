@@ -41,6 +41,14 @@ public:
 private:
 	void clock();
 
+public:
+#ifdef DEF_NES_EMU_UI
+	*uint8 getCpuState();
+	*uint8 getRam();
+
+#endif
+
+
 };
 
 #endif

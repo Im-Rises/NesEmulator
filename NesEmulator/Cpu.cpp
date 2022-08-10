@@ -656,3 +656,13 @@ void Cpu::interruptSubFunction()
 	pc.lo = read(0xFFFE);
 	pc.hi = read(0xFFFF);
 }
+
+uint16 Cpu::getPc()
+{
+	return pc.reg;
+}
+
+void Cpu::setPc(const uint16& value)
+{
+	pc.reg = value;
+}

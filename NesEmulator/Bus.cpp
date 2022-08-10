@@ -39,9 +39,9 @@ Bus::Bus(Cpu* cpu, Cartridge* cartridge, Ppu* ppu) : memory{}//Init all array to
 /// <param name="address"></param>
 /// <returns></returns>
 
-uint8 Bus::read(const uint16& address)
+uint8 Bus::read(const uint16& address) const
 {
-	if (0 <= address && address < 0x2000)//Read ram (Mmu)
+	if (address < 0x2000)//Read ram (Mmu)
 	{
 		//return mmu->read(address);
 		return memory[address % 0x0800];
