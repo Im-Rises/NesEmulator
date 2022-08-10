@@ -1,7 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.8)
 
 # Emulator
-project("NesEmulator")
 add_subdirectory("NesEmulator")
 
 # Emulator UI

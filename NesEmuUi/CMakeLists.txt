@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+project("NesEmuUi")
+
 set(SRCS "main.cpp" "NesEmuUi.cpp")
 set(HEADERS "NesEmuUi.h")
 
@@ -17,8 +19,8 @@ set(SRCS_IMGUI "imgui/imgui.cpp" "imgui/imgui_demo.cpp" "imgui/imgui_draw.cpp" "
 
 find_package(OpenGL REQUIRED)
 
-add_executable(NesEmuUi ${SRCS} ${SRCS_IMGUI} ${HEADERS} ${HEADERS_IMGUI})
+add_executable(${PROJECT_NAME} ${SRCS} ${SRCS_IMGUI} ${HEADERS} ${HEADERS_IMGUI})
 
-target_link_libraries(NesEmuUi "glfw")
+target_link_libraries(${PROJECT_NAME} "glfw")
 
-target_link_libraries(NesEmuUi OpenGL::GL)
+target_link_libraries(${PROJECT_NAME} OpenGL::GL)
