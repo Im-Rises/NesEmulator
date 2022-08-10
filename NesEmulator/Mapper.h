@@ -1,7 +1,7 @@
 #ifndef DEF_MAPPER
 #define DEF_MAPPER
 
-#include "binaryLib.h"
+#include "binaryLib/binaryLib.h"
 
 /// <summary>
 /// The purpose of the mapper is to transform a given address to another to do banking.

@@ -1,7 +1,7 @@
 #ifndef DEF_PPU
 #define DEF_PPU
 
-#include "binaryLib.h"
+#include "binaryLib/binaryLib.h"
 
 class Bus;
 class PpuBus;
