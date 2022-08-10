@@ -1,7 +1,7 @@
 #ifndef DEF_BUS
 #define DEF_BUS
 
-#include "binaryLib.h"
+#include "binaryLib/binaryLib.h"
 
 class Cpu;
 class Mmu;

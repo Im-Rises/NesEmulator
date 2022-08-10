@@ -235,6 +235,18 @@ Memory map:
 Test roms:  
 <https://www.nesdev.org/wiki/Emulator_tests>  
 
+Dear ImGui:  
+<https://github.com/ocornut/imgui>  
+
+Dear ImGui Memory Editor:  
+<https://github.com/ocornut/imgui_club/blob/master/imgui_memory_editor/imgui_memory_editor.h>
+
+SFML:  
+<https://github.com/SFML/SFML>  
+
+GLFW:  
+<https://github.com/glfw/glfw>  
+
 ## Contributors
 
 Quentin MOREL :

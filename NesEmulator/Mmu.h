@@ -1,7 +1,7 @@
 #ifndef DEF_MMU
 #define DEF_MMU
 
-#include "binaryLib.h"
+#include "binaryLib/binaryLib.h"
 
 /// <summary>
 /// Class may be useless

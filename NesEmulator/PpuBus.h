@@ -1,7 +1,7 @@
 #ifndef DEF_PPUBUS
 #define DEF_PPUBUS
 
-#include "binaryLib.h"
+#include "binaryLib/binaryLib.h"
 
 class Ppu;
 class Cartridge;
