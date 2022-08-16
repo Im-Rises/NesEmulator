@@ -150,7 +150,7 @@ cmake .
 
 ### MacOs
 
-For MacOs user, you should install brew package manager by following the instructions in the link below:  
+For macOS user, you should install brew package manager by following the instructions in the link below:  
 <https://brew.sh>
 
 Then type the following command to install cmake:
@@ -173,9 +173,9 @@ cmake .
 
 ## Run tests
 
-The CPU good bahaviour has been tested with the `nestests.nes` test rom that you can find in the test_roms forlder.
+The CPU good behaviour has been tested with the `nestests.nes` test rom that you can find in the test_roms folder.
 
-A CMake test is set up to directly test the prog. You can find it in the `test`folder and start it by typing the command below at the project root folder.
+A CMake test is set up to directly test the program. You can find it in the `test`folder and start it by typing the command below at the project root folder.
 
 ```bash
 ctest
@@ -235,17 +235,21 @@ Memory map:
 Test roms:  
 <https://www.nesdev.org/wiki/Emulator_tests>  
 
+GLFW:  
+<https://github.com/glfw/glfw>  
+
 Dear ImGui:  
 <https://github.com/ocornut/imgui>  
 
-Dear ImGui Memory Editor:  
+Dear ImGui - Memory Editor:  
 <https://github.com/ocornut/imgui_club/blob/master/imgui_memory_editor/imgui_memory_editor.h>
+
+Dear ImGUi - ImGui-Addons (FileBrowser):  
+<https://github.com/gallickgunner/ImGui-Addons/tree/master/FileBrowser>
+<!--https://github.com/aiekick/ImGuiFileDialog-->
 
 SFML:  
 <https://github.com/SFML/SFML>  
-
-GLFW:  
-<https://github.com/glfw/glfw>  
 
 ## Contributors
 
