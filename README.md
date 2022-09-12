@@ -93,9 +93,39 @@ Then you can start by double-clicking the executable of typing the following com
 
 Placeholder
 
-## Code architecture
+## Project architecture
 
-Placeholder
+<!--
+~~~
+project-revision
+├── dataset
+|  ├── test
+|  ├── train
+├── docs
+├── misc
+|   ├── dataset
+|   ├── reszie.py
+├── src
+|   ├── denoise
+|   |   |── __init__.py
+|   |   |── denoise.py
+|   |   |── errors.py
+|   ├── noise
+|   |   |── __init__.py
+|   |   |── errors.py
+|   |   |── noise.py
+|   ├── results
+|   ├── cobra.py
+|   ├── cobramachine.py
+|   ├── denoise.py
+|   ├── helper.py
+|   ├── main.py
+|   ├── req.txt
+├── README.md
+├── guidelines.md
+├── proposal.md
+~~~
+-->
 
 ## Compilation
 

@@ -360,7 +360,7 @@ private:
 	Bus* bus = nullptr;
 
 	/// <summary>
-	/// Temporary datas for the opcodes 
+	/// Temporary datas for the opcodes
 	/// </summary>
 	uint8 fetched;
 	uint16 relativeAddress;
