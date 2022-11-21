@@ -1,19 +1,26 @@
 #ifndef DEF_NES_EMU_UI
 #define DEF_NES_EMU_UI
 
-struct GLFWwindow;
+#define VER 0.1
+#define AUTHOR "Im-Rises"
+#define PROJECT_NAME "NesEmulator"
+
+#include <SDL.h>
+
+// struct SDL_Window;
 
 class NesEmuUi {
 
 private:
-	GLFWwindow* window;
-	int display_w, display_h;
+    SDL_Window* window;
+    SDL_GLContext gl_context;
+    //    int display_w, display_h;
 
 public:
-	NesEmuUi();
-	~NesEmuUi();
+    NesEmuUi();
+    ~NesEmuUi();
 
-	void start();
+    void start();
 };
 
 #endif

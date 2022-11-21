@@ -1,10 +1,6 @@
 #ifndef DEF_NES
 #define DEF_NES
 
-#define VER 0.1
-#define AUTHOR "Im-Rises"
-#define PROJECT_NAME "NesEmulator"
-
 #include "Bus.h"
 #include "Cpu.h"
 #include "Mmu.h"

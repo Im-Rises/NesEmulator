@@ -1,236 +1,364 @@
 #include "NesEmuUi.h"
 
-#include <iostream>
-
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-#include "../NesEmuUi/imgui/imgui_memory_editor.h"
-#include "../NesEmuUi/imgui/ImGuiFileBrowser.h"
-#include <stdio.h>
+#include <imgui.h>
+#include <imgui_impl_sdl.h>
+#include <imgui_impl_opengl3.h>
+#include <cstdio>
+//#include <SDL.h>
 #if defined(IMGUI_IMPL_OPENGL_ES2)
-#include <GLES2/gl2.h>
+#include <SDL_opengles2.h>
+#else
+#include <SDL_opengl.h>
 #endif
-#include <GLFW/glfw3.h>
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
-#pragma comment(lib, "legacy_stdio_definitions")
-#endif
-
-static void glfw_error_callback(int error, const char* description) { fprintf(stderr, "Glfw Error %d: %s\n", error, description); }
 
 NesEmuUi::NesEmuUi() {
-    glfwSetErrorCallback(glfw_error_callback);
-    if (!glfwInit())
-        exit(1);
-    
+    // Setup SDL
+    // (Some versions of SDL before <2.0.10 appears to have performance/stalling issues on a minority of Windows systems,
+    // depending on whether SDL_INIT_GAMECONTROLLER is enabled or disabled.. updating to the latest version of SDL is recommended!)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
+    {
+        printf("Error: %s\n", SDL_GetError());
+        exit(-1);
+    }
+
+    // Decide GL+GLSL versions
 #if defined(IMGUI_IMPL_OPENGL_ES2)
-		// GL ES 2.0 + GLSL 100
-		const char* glsl_version = "#version 100";
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+    // GL ES 2.0 + GLSL 100
+    const char* glsl_version = "#version 100";
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 #elif defined(__APPLE__)
-		// GL 3.2 + GLSL 150
-		const char* glsl_version = "#version 150";
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // 3.2+ only
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);		   // Required on Mac
+    // GL 3.2 Core + GLSL 150
+    const char* glsl_version = "#version 150";
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 #else
     // GL 3.0 + GLSL 130
     const char* glsl_version = "#version 130";
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
-    // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 #endif
 
-    window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
-    if (window == NULL)
-        exit(1);
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
-    
+    // Create window with graphics context
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+    SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+    window = SDL_CreateWindow("Dear ImGui SDL2+OpenGL3 example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+    gl_context = SDL_GL_CreateContext(window);
+    SDL_GL_MakeCurrent(window, gl_context);
+    SDL_GL_SetSwapInterval(1); // Enable vsync
+
+    // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     (void)io;
-    // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
     // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;   // Enable Docking
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-Viewport / Platform Windows
+    // io.ConfigViewportsNoAutoMerge = true;
+    // io.ConfigViewportsNoTaskBarIcon = true;
 
+    // Setup Dear ImGui style
     ImGui::StyleColorsDark();
+    // ImGui::StyleColorsLight();
 
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+    ImGuiStyle& style = ImGui::GetStyle();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
+
+    // Setup Platform/Renderer backends
+    ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL3_Init(glsl_version);
+
+    // Load Fonts
+    // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
+    // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
+    // - If the file cannot be loaded, the function will return NULL. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
+    // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
+    // - Use '#define IMGUI_ENABLE_FREETYPE' in your imconfig file to use Freetype for higher quality font rendering.
+    // - Read 'docs/FONTS.md' for more instructions and details.
+    // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
+    // io.Fonts->AddFontDefault();
+    // io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
+    // io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
+    // io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
+    // io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
+    // ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
+    // IM_ASSERT(font != NULL);
 }
 
 NesEmuUi::~NesEmuUi() {
+    // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
 
-    glfwDestroyWindow(window);
-    glfwTerminate();
+    SDL_GL_DeleteContext(gl_context);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }
 
 void NesEmuUi::start() {
-	bool show_demo_window = true;
-	bool show_another_window = false;
-	int refresRate = 60;
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    // Our state
+    bool show_demo_window = true;
+    bool show_another_window = false;
+    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-	float fps = 60;
-	static MemoryEditor mem_edit_1;
-	static char data[0x10000];
-	size_t data_size = 0x10000;
+    // Main loop
+    bool done = false;
+    while (!done)
+    {
+        // Poll and handle events (inputs, window resize, etc.)
+        // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
+        // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
+        // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
+        // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
+        SDL_Event event;
+        while (SDL_PollEvent(&event))
+        {
+            ImGui_ImplSDL2_ProcessEvent(&event);
+            if (event.type == SDL_QUIT)
+                done = true;
+            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
+                done = true;
+        }
 
-	imgui_addons::ImGuiFileBrowser file_dialog; // As a class member or globally
-	bool open = false, save = false;
+        // Start the Dear ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplSDL2_NewFrame();
+        ImGui::NewFrame();
 
-	// Main loop
-	while (!glfwWindowShouldClose(window)) {
-		// Poll and handle events (inputs, window resize, etc.)
-		// You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-		// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
-		// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-		// Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
-		glfwPollEvents();
+        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+        if (show_demo_window)
+            ImGui::ShowDemoWindow(&show_demo_window);
 
-		// Start the Dear ImGui frame
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
+        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+        {
+            static float f = 0.0f;
+            static int counter = 0;
 
-		mem_edit_1.DrawWindow("Ram Editor", data, data_size);
+            ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
 
-		mem_edit_1.DrawWindow("Cartridge hex view", data, data_size);
+            ImGui::Text("This is some useful text.");          // Display some text (you can use a format strings too)
+            ImGui::Checkbox("Demo Window", &show_demo_window); // Edit bools storing our window open/close state
+            ImGui::Checkbox("Another Window", &show_another_window);
 
-		int test_reg = 0;
+            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
-		// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-		{
-			static float f = 0.0f;
-			static int counter = 0;
+            if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
+                counter++;
+            ImGui::SameLine();
+            ImGui::Text("counter = %d", counter);
 
-			ImGui::Begin("CPU registers"); // Create a window called "Hello, world!" and append into it.
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            ImGui::End();
+        }
 
-			ImGui::Text("A :    ");
-			ImGui::SameLine();
-			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
+        // 3. Show another simple window.
+        if (show_another_window)
+        {
+            ImGui::Begin("Another Window", &show_another_window); // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+            ImGui::Text("Hello from another window!");
+            if (ImGui::Button("Close Me"))
+                show_another_window = false;
+            ImGui::End();
+        }
 
-			ImGui::Text("B :    ");
-			ImGui::SameLine();
-			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
+        // Rendering
+        ImGui::Render();
+        ImGuiIO& io = ImGui::GetIO();
+        glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+        glClear(GL_COLOR_BUFFER_BIT);
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-			ImGui::Text("C :    ");
-			ImGui::SameLine();
-			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
+        // Update and Render additional Platform Windows
+        // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
+        //  For this specific demo app we could also call SDL_GL_MakeCurrent(window, gl_context) directly)
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
+            SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+            SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+        }
 
-			ImGui::Text("D :    ");
-			ImGui::SameLine();
-			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
-
-			ImGui::Text("E :    ");
-			ImGui::SameLine();
-			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
-
-			ImGui::Text("H :    ");
-			ImGui::SameLine();
-			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
-
-			ImGui::Text("L :    ");
-			ImGui::SameLine();
-			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
-
-			ImGui::Text("PC :   ");
-			ImGui::SameLine();
-			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
-
-			ImGui::Text("STAT : ");
-			ImGui::SameLine();
-			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
-
-			ImGui::End();
-		}
-
-		{
-			ImGui::Begin("Disassembler");
-			ImGui::End();
-		}
-
-		{
-			ImGui::Begin("Controller");
-			ImGui::Button("Run");
-			ImGui::Button("Break");
-			ImGui::Button("Step");
-			ImGui::SliderInt("Refresh Rate", &refresRate, 30, 120);
-			ImGui::End();
-		}
-
-		{
-			ImGui::Begin("Sprite memory view");
-			ImGui::End();
-		}
-
-		{
-			ImGui::Begin("Background memory view");
-			ImGui::End();
-		}
-
-		{
-			ImGui::Begin("Input Viewer");
-			ImGui::End();
-		}
-
-		{
-			ImGui::Begin("Game View");
-			ImGui::End();
-		}
-
-		{
-			if (ImGui::BeginMainMenuBar()) {
-				if (ImGui::BeginMenu("Menu")) {
-					if (ImGui::MenuItem("Open", NULL))
-						open = true;
-					if (ImGui::MenuItem("Save", NULL))
-						save = true;
-
-					ImGui::EndMenu();
-				}
-				ImGui::EndMainMenuBar();
-			}
-
-			// Remember the name to ImGui::OpenPopup() and showFileDialog() must be same...
-			if (open)
-				ImGui::OpenPopup("Open File");
-			if (save)
-				ImGui::OpenPopup("Save File");
-
-			/* Optional third parameter. Support opening only compressed rar/zip files.
-			 * Opening any other file will show error, return false and won't close the dialog.
-			 */
-			if (file_dialog.showFileDialog("Open File", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ".rar,.zip,.7z")) {
-				std::cout << file_dialog.selected_fn << std::endl;	 // The name of the selected file or directory in case of Select Directory dialog mode
-				std::cout << file_dialog.selected_path << std::endl; // The absolute path to the selected file
-			}
-			if (file_dialog.showFileDialog("Save File", imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), ".png,.jpg,.bmp")) {
-				std::cout << file_dialog.selected_fn << std::endl;	 // The name of the selected file or directory in case of Select Directory dialog mode
-				std::cout << file_dialog.selected_path << std::endl; // The absolute path to the selected file
-				std::cout << file_dialog.ext << std::endl;			 // Access ext separately (For SAVE mode)
-																	 // Do writing of files based on extension here
-			}
-		}
-
-		// Rendering
-		ImGui::Render();
-		int display_w, display_h;
-		glfwGetFramebufferSize(window, &display_w, &display_h);
-		glViewport(0, 0, display_w, display_h);
-		glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-		glClear(GL_COLOR_BUFFER_BIT);
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-		glfwSwapBuffers(window);
-	}
+        SDL_GL_SwapWindow(window);
+    }
 }
+
+// void NesEmuUi::start() {
+//	bool show_demo_window = true;
+//	bool show_another_window = false;
+//	int refresRate = 60;
+//	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+//
+//	float fps = 60;
+//	static MemoryEditor mem_edit_1;
+//	static char data[0x10000];
+//	size_t data_size = 0x10000;
+//
+//	imgui_addons::ImGuiFileBrowser file_dialog; // As a class member or globally
+//	bool open = false, save = false;
+//
+//	// Main loop
+//	while (!glfwWindowShouldClose(window)) {
+//		// Poll and handle events (inputs, window resize, etc.)
+//		// You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
+//		// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
+//		// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
+//		// Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
+//		glfwPollEvents();
+//
+//		// Start the Dear ImGui frame
+//		ImGui_ImplOpenGL3_NewFrame();
+//		ImGui_ImplGlfw_NewFrame();
+//		ImGui::NewFrame();
+//
+//		mem_edit_1.DrawWindow("Ram Editor", data, data_size);
+//
+//		mem_edit_1.DrawWindow("Cartridge hex view", data, data_size);
+//
+//		int test_reg = 0;
+//
+//		// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+//		{
+//			static float f = 0.0f;
+//			static int counter = 0;
+//
+//			ImGui::Begin("CPU registers"); // Create a window called "Hello, world!" and append into it.
+//
+//			ImGui::Text("A :    ");
+//			ImGui::SameLine();
+//			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
+//
+//			ImGui::Text("B :    ");
+//			ImGui::SameLine();
+//			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
+//
+//			ImGui::Text("C :    ");
+//			ImGui::SameLine();
+//			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
+//
+//			ImGui::Text("D :    ");
+//			ImGui::SameLine();
+//			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
+//
+//			ImGui::Text("E :    ");
+//			ImGui::SameLine();
+//			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
+//
+//			ImGui::Text("H :    ");
+//			ImGui::SameLine();
+//			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
+//
+//			ImGui::Text("L :    ");
+//			ImGui::SameLine();
+//			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
+//
+//			ImGui::Text("PC :   ");
+//			ImGui::SameLine();
+//			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
+//
+//			ImGui::Text("STAT : ");
+//			ImGui::SameLine();
+//			ImGui::InputScalar("##DT", ImGuiDataType_U8, &test_reg, NULL, NULL, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
+//
+//			ImGui::End();
+//		}
+//
+//		{
+//			ImGui::Begin("Disassembler");
+//			ImGui::End();
+//		}
+//
+//		{
+//			ImGui::Begin("Controller");
+//			ImGui::Button("Run");
+//			ImGui::Button("Break");
+//			ImGui::Button("Step");
+//			ImGui::SliderInt("Refresh Rate", &refresRate, 30, 120);
+//			ImGui::End();
+//		}
+//
+//		{
+//			ImGui::Begin("Sprite memory view");
+//			ImGui::End();
+//		}
+//
+//		{
+//			ImGui::Begin("Background memory view");
+//			ImGui::End();
+//		}
+//
+//		{
+//			ImGui::Begin("Input Viewer");
+//			ImGui::End();
+//		}
+//
+//		{
+//			ImGui::Begin("Game View");
+//			ImGui::End();
+//		}
+//
+//		{
+//			if (ImGui::BeginMainMenuBar()) {
+//				if (ImGui::BeginMenu("Menu")) {
+//					if (ImGui::MenuItem("Open", NULL))
+//						open = true;
+//					if (ImGui::MenuItem("Save", NULL))
+//						save = true;
+//
+//					ImGui::EndMenu();
+//				}
+//				ImGui::EndMainMenuBar();
+//			}
+//
+//			// Remember the name to ImGui::OpenPopup() and showFileDialog() must be same...
+//			if (open)
+//				ImGui::OpenPopup("Open File");
+//			if (save)
+//				ImGui::OpenPopup("Save File");
+//
+//			/* Optional third parameter. Support opening only compressed rar/zip files.
+//			 * Opening any other file will show error, return false and won't close the dialog.
+//			 */
+//			if (file_dialog.showFileDialog("Open File", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ".rar,.zip,.7z")) {
+//				std::cout << file_dialog.selected_fn << std::endl;	 // The name of the selected file or directory in case of Select Directory dialog mode
+//				std::cout << file_dialog.selected_path << std::endl; // The absolute path to the selected file
+//			}
+//			if (file_dialog.showFileDialog("Save File", imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), ".png,.jpg,.bmp")) {
+//				std::cout << file_dialog.selected_fn << std::endl;	 // The name of the selected file or directory in case of Select Directory dialog mode
+//				std::cout << file_dialog.selected_path << std::endl; // The absolute path to the selected file
+//				std::cout << file_dialog.ext << std::endl;			 // Access ext separately (For SAVE mode)
+//																	 // Do writing of files based on extension here
+//			}
+//		}
+//
+//		// Rendering
+//		ImGui::Render();
+//		int display_w, display_h;
+//		glfwGetFramebufferSize(window, &display_w, &display_h);
+//		glViewport(0, 0, display_w, display_h);
+//		glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+//		glClear(GL_COLOR_BUFFER_BIT);
+//		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+//
+//		glfwSwapBuffers(window);
+//	}
+// }
