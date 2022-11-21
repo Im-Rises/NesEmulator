@@ -1,27 +1,18 @@
-﻿cmake_minimum_required (VERSION 3.8)
+﻿include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dependencies)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dependencies/imgui)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dependencies/SDL2/include)
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+file(GLOB_RECURSE SRCS_HEADERS_IMGUI "${CMAKE_SOURCE_DIR}/dependencies/imgui/*.cpp" "${CMAKE_SOURCE_DIR}/dependencies/imgui/*.h")
 
-project("NesEmulator")
+#file(GLOB_RECURSE SRCS "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/*.cpp")
+#file(GLOB_RECURSE HEADERS "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/*.h")
 
-set(SRCS "main.cpp" "binaryLib/binaryLib.cpp" "Nes.cpp" "Bus.cpp" "Cpu.cpp" "Ppu.cpp" "Apu.cpp" "Mmu.cpp" "Joypad.cpp" "Cartridge.cpp" "PpuBus.cpp" "Mapper.cpp" "Mapper000.cpp")
-set(HEADERS "binaryLib/binaryLib.h" "Nes.h" "Bus.h" "Cpu.h" "Ppu.h" "Apu.h" "Mmu.h" "Joypad.h" "Cartridge.h" "PpuBus.h" "Mapper.h" "Mapper000.h")
+set(SRCS main.cpp NesEmuUi.cpp)
+set(HEADERS NesEmuUi.h)
 
-set(SFML_COMPONENTS audio network graphics window system)
-set(SFML_LINKED_LIBRARIES sfml-audio sfml-network sfml-graphics sfml-window sfml-system)
+set(CMAKE_PREFIX_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/dependencies/SDL2/cmake/")
 
-include_directories("${CMAKE_SOURCE_DIR}/NesEmulator/include")
+add_executable(${PROJECT_NAME} ${SRCS} ${HEADERS} ${SRCS_HEADERS_IMGUI})
 
-if(WIN32)
-	set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/NesEmulator/lib/cmake")
-	set(SFML_DIR "${CMAKE_SOURCE_DIR}/NesEmulator/lib/cmake/SFML")
-	find_package(SFML REQUIRED COMPONENTS ${SFML_COMPONENTS})
-elseif(UNIX)
-	find_package(SFML 2.5 REQUIRED COMPONENTS ${SFML_COMPONENTS})
-endif()
-
-add_executable(${PROJECT_NAME} ${SRCS} ${HEADERS})
-
-target_link_libraries(${PROJECT_NAME} ${SFML_LINKED_LIBRARIES})
+find_package(SDL2 REQUIRED)
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})

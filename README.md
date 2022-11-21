@@ -3,7 +3,7 @@
 <p align="center">
       <img src="https://user-images.githubusercontent.com/59691442/183268126-b3d19e66-8f2d-463a-805e-ae6ef7cc6c01.png" alt="cmakeLogo" style="height:60px;"/>
       <img src="https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white" alt="cppLogo" style="height:60px;"/>
-      <img src="https://user-images.githubusercontent.com/59691442/183268128-6f1a7773-a77c-4635-9a61-daa72c023915.png" alt="sfmlLogo" style="height:60px;"/>
+      <img src="https://user-images.githubusercontent.com/59691442/202939457-a52f5d84-b7b4-4d53-81dd-a70a8788f8c5.png" alt="sdl2Logo" style="height:60px;"/>
 </p>
 
 ## Description
@@ -274,9 +274,13 @@ Dear ImGui:
 Dear ImGui - Memory Editor:  
 <https://github.com/ocornut/imgui_club/blob/master/imgui_memory_editor/imgui_memory_editor.h>
 
+<!--
 Dear ImGUi - ImGui-Addons (FileBrowser):  
 <https://github.com/gallickgunner/ImGui-Addons/tree/master/FileBrowser>
-<!--https://github.com/aiekick/ImGuiFileDialog-->
+-->
+<!--
+https://github.com/aiekick/ImGuiFileDialog
+-->
 
 SFML:  
 <https://github.com/SFML/SFML>  

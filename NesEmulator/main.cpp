@@ -1,6 +1,7 @@
 #include <iostream>
 
-#include "Nes.h"
+#include "../NesEmulator/NesEmuUi.h"
+#include <SDL.h>
 
 /// <summary>
 /// Errors :
@@ -19,34 +20,29 @@
 /// <param name="argv"></param>
 /// <returns></returns>
 
-int main(int argc, char *argv[]) {
-    std::cout << PROJECT_NAME << " " << VER << " by " << AUTHOR << std::endl;
+int main(int argc, char* argv[]) {
+    //    std::cout << PROJECT_NAME << " " << VER << " by " << AUTHOR << std::endl;
+    //
+    //    if (argc > 1) {
+    //        std::string romPath = argv[1];
+    //        Nes *nes = Nes::getInstance(romPath);
+    //    }
+    //	NesEmuUi nesEmuUi;
+    //	nesEmuUi.start();
 
-    if (argc > 1) {
-        std::string romPath = argv[1];
-        Nes *nes = Nes::getInstance(romPath);
+    if (SDL_Init( SDL_INIT_VIDEO ) < 0) {
+        std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
+    } else {
+
+        SDL_CreateWindow(
+            "SDL2 Demo",
+            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+            600, 600,
+            SDL_WINDOW_SHOWN
+        );
+
+        SDL_Delay(2000);
     }
 
     return 0;
 }
-
-/*
-#include <SFML/Window.hpp>
-
-int main() {
-	sf::Window window(sf::VideoMode(800, 600), "My window");
-
-	// run the program as long as the window is open
-	while (window.isOpen()) {
-		// check all the window's events that were triggered since the last iteration of the loop
-		sf::Event event;
-		while (window.pollEvent(event)) {
-			// "close requested" event: we close the window
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-	}
-
-	return 0;
-}
-*/

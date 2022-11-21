@@ -1,8 +1,12 @@
 ﻿cmake_minimum_required(VERSION 3.8)
 
-add_subdirectory("NesEmulator")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_subdirectory("NesEmuUi")
+project("NesEmulator")
 
-enable_testing()
-add_subdirectory("test")
+add_subdirectory(${PROJECT_NAME})
+
+#enable_testing()
+#add_subdirectory("test")
