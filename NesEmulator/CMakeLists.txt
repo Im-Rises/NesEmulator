@@ -1,25 +1,40 @@
-#include_directories(${CMAKE_SOURCE_DIR}/dependencies)
-include_directories(${CMAKE_SOURCE_DIR}/dependencies/SDL2/include)
-include_directories(${CMAKE_SOURCE_DIR}/dependencies/imgui)
+include_directories("${CMAKE_SOURCE_DIR}/dependencies")
+include_directories("${CMAKE_SOURCE_DIR}/dependencies/imgui")
+include_directories("${CMAKE_SOURCE_DIR}/dependencies/glad/include")
+include_directories("${CMAKE_SOURCE_DIR}/dependencies/glfw/include")
 
-#file(GLOB_RECURSE SRCS_HEADERS_IMGUI "${CMAKE_SOURCE_DIR}/dependencies/imgui/*.cpp" "${CMAKE_SOURCE_DIR}/dependencies/imgui/*.h")
+file(GLOB_RECURSE SRCS_HEADERS_IMGUI "${CMAKE_SOURCE_DIR}/dependencies/imgui/*.cpp" "${CMAKE_SOURCE_DIR}/dependencies/imgui/*.h")
+file(GLOB_RECURSE SRCS_HEADERS_GLAD "${CMAKE_SOURCE_DIR}/dependencies/glad/*.c" "${CMAKE_SOURCE_DIR}/dependencies/glad/*.h")
 
 #file(GLOB_RECURSE SRCS "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/*.cpp")
 #file(GLOB_RECURSE HEADERS "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/*.h")
 
-#set(SRCS main.cpp NesEmuUi.cpp)
-#set(HEADERS NesEmuUi.h)
-#add_executable(${PROJECT_NAME} ${SRCS} ${HEADERS} ${SRCS_HEADERS_IMGUI})
-
-
-if(WIN32)
-	set(CMAKE_PREFIX_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/dependencies/SDL2/cmake/")
-endif()
-
-find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp NesEmuUi.h NesEmuUi.cpp ${SRCS} ${HEADERS} ${SRCS_HEADERS_IMGUI} ${SRCS_HEADERS_GLAD})
 
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} OpenGL::GL)
+
+if (WIN32)
+    target_link_libraries(${PROJECT_NAME} "${CMAKE_SOURCE_DIR}/dependencies/glfw/lib-vc2019/glfw3.lib")
+elseif (UNIX)
+    find_package(glfw3 3.3 REQUIRED)
+    target_link_libraries(${PROJECT_NAME} glfw ${CMAKE_DL_LIBS})
+else ()
+    message(FATAL_ERROR "OS not configured in CMakeLists.txt")
+endif ()
+
+######################SDL2######################
+#include_directories(${CMAKE_SOURCE_DIR}/dependencies/SDL2/include)
+#
+#if(WIN32)
+#	set(CMAKE_PREFIX_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/dependencies/SDL2/cmake/")
+#endif()
+#
+#find_package(SDL2 REQUIRED)
+#find_package(OpenGL REQUIRED)
+#
+#add_executable(${PROJECT_NAME} main.cpp)
+#
+#target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+#target_link_libraries(${PROJECT_NAME} OpenGL::GL)

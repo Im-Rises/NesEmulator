@@ -5,15 +5,12 @@
 #define AUTHOR "Im-Rises"
 #define PROJECT_NAME "NesEmulator"
 
-#include <SDL.h>
-
-// struct SDL_Window;
+struct GLFWwindow;
 
 class NesEmuUi {
 
 private:
-    SDL_Window* window;
-    SDL_GLContext gl_context;
+    GLFWwindow* window;
     //    int display_w, display_h;
 
 public:
