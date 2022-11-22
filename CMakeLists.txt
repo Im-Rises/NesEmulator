@@ -8,5 +8,5 @@ project("NesEmulator")
 
 add_subdirectory(${PROJECT_NAME})
 
-#enable_testing()
-#add_subdirectory("test")
+enable_testing()
+add_subdirectory("test")
