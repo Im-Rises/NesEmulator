@@ -20,6 +20,12 @@ find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 
 add_executable(${PROJECT_NAME} main.cpp ${SRCS_HEADERS_IMGUI})
+if (WIN32)
+	target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES})
+else()
+	target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} dl)
+	#target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
+endif()
 
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+#target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} OpenGL::GL)
