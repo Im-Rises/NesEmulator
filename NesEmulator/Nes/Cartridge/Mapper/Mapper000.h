@@ -2,7 +2,7 @@
 #define DEF_MAPPER000
 
 #include "Mapper.h"
-#include "../../../binaryLib/binaryLib.h"
+#include <binaryLib.h>
 
 /// <summary>
 /// https://wiki.nesdev.org/w/index.php?title=NROM

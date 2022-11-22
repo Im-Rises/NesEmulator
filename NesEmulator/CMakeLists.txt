@@ -1,4 +1,5 @@
 include_directories("${CMAKE_SOURCE_DIR}/dependencies")
+include_directories("${CMAKE_SOURCE_DIR}/dependencies/binaryLib")
 include_directories("${CMAKE_SOURCE_DIR}/dependencies/imgui")
 include_directories("${CMAKE_SOURCE_DIR}/dependencies/glad/include")
 include_directories("${CMAKE_SOURCE_DIR}/dependencies/glfw/include")

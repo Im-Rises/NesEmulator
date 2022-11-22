@@ -1,7 +1,7 @@
 #ifndef DEF_CARTRIDGE
 #define DEF_CARTRIDGE
 
-#include "../../binaryLib/binaryLib.h"
+#include <binaryLib.h>
 #include <string>
 #include <vector>
 #include <memory>

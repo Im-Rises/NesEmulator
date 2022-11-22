@@ -2,7 +2,7 @@
 #define DEF_CPU
 
 #include <string>
-#include "../../binaryLib/binaryLib.h"
+#include <binaryLib.h>
 
 class Bus;
 
