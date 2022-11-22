@@ -16,7 +16,7 @@ private:
 	static Nes* nesInstance;
 	Nes(const std::string romPath);
 
-	Cpu cpu;	
+	Cpu cpu;
 	Cartridge cartridge;
 	//Mmu mmu;
 	Ppu ppu;
@@ -32,7 +32,7 @@ public:
 	static Nes* getInstance(const std::string romPath);
 	void start();
 	void reset();
-	//void insertCartridge(const std::string& romPath);
+	void insertCartridge(const std::string& romPath);
 
 private:
 	void clock();

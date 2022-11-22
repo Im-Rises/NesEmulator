@@ -1,43 +1,33 @@
 #include "Nes.h"
 
-//#include "SDL2/include/SDL.h"
-
 Nes* Nes::nesInstance = nullptr;
 
-//Nes::Nes(const std::string romPath) :cartridge(romPath), bus(&cpu, &mmu, &cartridge, &ppu), ppuBus(&ppu, &cartridge)
-Nes::Nes(const std::string romPath) :cartridge(romPath), bus(&cpu, &cartridge, &ppu), ppuBus(&ppu, &cartridge)
-{
-	cyclesCounter = 0;
+// Nes::Nes(const std::string romPath) :cartridge(romPath), bus(&cpu, &mmu, &cartridge, &ppu), ppuBus(&ppu, &cartridge)
+Nes::Nes(const std::string romPath) : cartridge(romPath), bus(&cpu, &cartridge, &ppu), ppuBus(&ppu, &cartridge) {
+    cyclesCounter = 0;
 }
 
-Nes* Nes::getInstance(const std::string romPath)
-{
-	if (nesInstance == nullptr)
-		nesInstance = new Nes(romPath);
+Nes* Nes::getInstance(const std::string romPath) {
+    if (nesInstance == nullptr)
+        nesInstance = new Nes(romPath);
 
-	return nesInstance;
+    return nesInstance;
 }
 
-void Nes::start()
-{
-	//while (true)
-	//{
-	//
-	//}
+void Nes::start() {
+    // while (true)
+    //{
+    //
+    // }
 }
 
-void Nes::reset()
-{
-	cpu.reset();
-	cyclesCounter = 0;
+void Nes::reset() {
+    cpu.reset();
+    cyclesCounter = 0;
 }
 
-//void Nes::insertCartridge(const std::string& romPath)
-//{
-//
-//}
+void Nes::insertCartridge(const std::string& romPath) {
+}
 
-void Nes::clock()
-{
-
+void Nes::clock() {
 }
