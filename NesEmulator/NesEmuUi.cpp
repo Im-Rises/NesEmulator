@@ -49,7 +49,7 @@ NesEmuUi::NesEmuUi() {
 #endif
 
     // Create window with graphics context
-    window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
+    window = glfwCreateWindow(windowWidth, windowHeight, PROJECT_NAME, NULL, NULL);
     if (window == NULL)
         exit(1);
     glfwMakeContextCurrent(window);
@@ -82,6 +82,9 @@ NesEmuUi::NesEmuUi() {
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
+
+    // Set clear color
+    backgroundColor = { 0.45f, 0.55f, 0.60f, 1.00f };
 }
 
 NesEmuUi::~NesEmuUi() {
@@ -95,86 +98,142 @@ NesEmuUi::~NesEmuUi() {
 }
 
 void NesEmuUi::start() {
-    // Our state
-    bool show_demo_window = true;
-    bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
-        // Poll and handle events (inputs, window resize, etc.)
-        // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-        // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
-        // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-        // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
-        glfwPollEvents();
-
-        // Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
-
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-        {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text.");          // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window); // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-            if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::End();
-        }
-
-        // 3. Show another simple window.
-        if (show_another_window)
-        {
-            ImGui::Begin("Another Window", &show_another_window); // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
-        }
-
-        // Rendering
-        ImGui::Render();
-        int display_w, display_h;
-        glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
-        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        // Update and Render additional Platform Windows
-        // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
-        //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
-        ImGuiIO& io = ImGui::GetIO();
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-        {
-            GLFWwindow* backup_current_context = glfwGetCurrentContext();
-            ImGui::UpdatePlatformWindows();
-            ImGui::RenderPlatformWindowsDefault();
-            glfwMakeContextCurrent(backup_current_context);
-        }
-
-        glfwSwapBuffers(window);
+        updateInput();
+        updateGui();
+        updateGame();
+        updateRender();
     }
+}
+
+void NesEmuUi::updateInput() {
+    glfwPollEvents();
+}
+
+void NesEmuUi::updateGui() {
+    // Start the Dear ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    {
+        static bool my_tool_active = true;
+        static bool showAboutPopup = false;
+        if (ImGui::BeginMainMenuBar())
+        {
+            if (ImGui::BeginMenu("File"))
+            {
+                if (ImGui::MenuItem("Open..", "Ctrl+O"))
+                { /* Do stuff */
+                }
+                if (ImGui::MenuItem("Save", "Ctrl+S"))
+                { /* Do stuff */
+                }
+                if (ImGui::MenuItem("Close", "Ctrl+W"))
+                { my_tool_active = false; }
+                if (ImGui::MenuItem("Exit", "Alt+F4"))
+                { glfwSetWindowShouldClose(window, true); }
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("View"))
+            {
+                if (ImGui::MenuItem("FullScreen", "F11"))
+                {
+                    // toggleFullScreen();
+                }
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Emulation"))
+            {
+                if (ImGui::MenuItem("Pause", "F5"))
+                {
+                    // togglePause();
+                }
+                if (ImGui::MenuItem("Reset", "F6"))
+                {
+                    // reset();
+                }
+                if (ImGui::MenuItem("Save State", "F7"))
+                {
+                    // saveState();
+                }
+                if (ImGui::MenuItem("Load State", "F8"))
+                {
+                    // loadState();
+                }
+                if (ImGui::MenuItem("Settings", "F9"))
+                {
+                    // showSettings();
+                }
+                if (ImGui::MenuItem("Debugger", "F10"))
+                {
+                    // showDebugger();
+                }
+                if (ImGui::MenuItem("Turbo", "F12"))
+                {
+                    // toggleTurbo();
+                }
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Help"))
+            {
+                if (ImGui::MenuItem("About " PROJECT_NAME))
+                {
+                    showAboutPopup = true;
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
+        }
+        if (showAboutPopup)
+            ImGui::OpenPopup("About " PROJECT_NAME "##AboutPopup");
+        if (ImGui::BeginPopupModal("About " PROJECT_NAME "##AboutPopup", &showAboutPopup,
+                ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize |
+                    ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse))
+        {
+            ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), PROJECT_NAME);
+            ImGui::Text("Version: %s", PROJECT_VERSION);
+            ImGui::NewLine();
+            ImGui::Text("Developed by: ");
+            ImGui::Text(AUTHOR);
+            ImGui::NewLine();
+            ImGui::Text("Github: %s", PROJECT_GITHUB);
+            ImGui::NewLine();
+            if (ImGui::Button("Close"))
+            {
+                ImGui::CloseCurrentPopup();
+                showAboutPopup = false;
+            }
+            ImGui::EndPopup();
+        }
+    }
+}
+
+void NesEmuUi::updateGame() {
+}
+
+void NesEmuUi::updateRender() {
+    // Rendering
+    ImGui::Render();
+    glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
+    glViewport(0, 0, windowWidth, windowHeight);
+    //    glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+    glClearColor(backgroundColor[0] * backgroundColor[3], backgroundColor[1] * backgroundColor[3], backgroundColor[2] * backgroundColor[3], backgroundColor[3]);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        GLFWwindow* backup_current_context = glfwGetCurrentContext();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backup_current_context);
+    }
+
+    glfwSwapBuffers(window);
 }
 
 // void NesEmuUi::start() {

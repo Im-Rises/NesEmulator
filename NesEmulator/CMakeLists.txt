@@ -23,18 +23,3 @@ elseif (UNIX)
 else ()
     message(FATAL_ERROR "OS not configured in CMakeLists.txt")
 endif ()
-
-######################SDL2######################
-#include_directories(${CMAKE_SOURCE_DIR}/dependencies/SDL2/include)
-#
-#if(WIN32)
-#	set(CMAKE_PREFIX_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/dependencies/SDL2/cmake/")
-#endif()
-#
-#find_package(SDL2 REQUIRED)
-#find_package(OpenGL REQUIRED)
-#
-#add_executable(${PROJECT_NAME} main.cpp)
-#
-#target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
-#target_link_libraries(${PROJECT_NAME} OpenGL::GL)

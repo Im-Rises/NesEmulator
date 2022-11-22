@@ -20,7 +20,7 @@
 /// <returns></returns>
 
 int main(int argc, char* argv[]) {
-    std::cout << PROJECT_NAME << " " << VER << " by " << AUTHOR << std::endl;
+    std::cout << PROJECT_NAME << " " << PROJECT_VERSION << " by " << AUTHOR << std::endl;
 
     NesEmuUi nesEmuUi;
     nesEmuUi.start();
