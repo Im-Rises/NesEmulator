@@ -20,12 +20,16 @@
 
 struct GLFWwindow;
 
+class Nes;
+
 class NesEmuUi {
 
 private:
     GLFWwindow* window;
     int windowWidth = WINDOW_WIDTH, windowHeight = WINDOW_HEIGHT;
     std::array<float, 4> backgroundColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+    Nes* nes;
 
 public:
     NesEmuUi();

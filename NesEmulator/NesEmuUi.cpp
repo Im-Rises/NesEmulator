@@ -1,5 +1,7 @@
 #include "NesEmuUi.h"
 
+//#include "Nes/Nes.h"
+
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -85,6 +87,9 @@ NesEmuUi::NesEmuUi() {
 
     // Set clear color
     backgroundColor = { 0.45f, 0.55f, 0.60f, 1.00f };
+
+    // Create a new NesEmulator
+    //    nes = Nes::getInstance();
 }
 
 NesEmuUi::~NesEmuUi() {
