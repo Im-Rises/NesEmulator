@@ -7,15 +7,19 @@ file(GLOB_RECURSE SRCS_HEADERS_IMGUI "${CMAKE_SOURCE_DIR}/dependencies/imgui/*.c
 #file(GLOB_RECURSE SRCS "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/*.cpp")
 #file(GLOB_RECURSE HEADERS "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/*.h")
 
-set(SRCS main.cpp NesEmuUi.cpp)
-set(HEADERS NesEmuUi.h)
+#set(SRCS main.cpp NesEmuUi.cpp)
+#set(HEADERS NesEmuUi.h)
+#add_executable(${PROJECT_NAME} ${SRCS} ${HEADERS} ${SRCS_HEADERS_IMGUI})
 
-set(CMAKE_PREFIX_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/dependencies/SDL2/cmake/")
 
-add_executable(${PROJECT_NAME} ${SRCS} ${HEADERS} ${SRCS_HEADERS_IMGUI})
+if(WIN32)
+	set(CMAKE_PREFIX_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/dependencies/SDL2/cmake/")
+endif()
 
 find_package(SDL2 REQUIRED)
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
-
 find_package(OpenGL REQUIRED)
+
+add_executable(${PROJECT_NAME} main.cpp ${SRCS_HEADERS_IMGUI})
+
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} OpenGL::GL)
