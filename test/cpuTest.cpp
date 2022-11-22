@@ -1,8 +1,8 @@
 //#include <iostream>
 
-#include "../NesEmulator/Nes/Cpu.h"
-#include "../NesEmulator/Nes/Bus.h"
-#include "../NesEmulator/Nes/Cartridge.h"
+#include "../NesEmulator/Nes/MainBus/Cpu.h"
+#include "../NesEmulator/Nes/MainBus/Bus.h"
+#include "../NesEmulator/Nes/Cartridge/Cartridge.h"
 
 using namespace std;
 
