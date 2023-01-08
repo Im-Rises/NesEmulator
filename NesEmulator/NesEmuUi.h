@@ -11,7 +11,7 @@
 
 #define PROJECT_GITHUB "https://github.com/Im-Rises/NesEmulator"
 
-#define AUTHOR "Quentin MOREL (IM-Rises)"
+#define AUTHOR "Quentin MOREL (Im-Rises)"
 
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
