@@ -29,7 +29,8 @@ private:
     int windowWidth = WINDOW_WIDTH, windowHeight = WINDOW_HEIGHT;
     std::array<float, 4> backgroundColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-    Nes* nes;
+    //    Nes* nes;
+    //    Nes nes;
 
 public:
     NesEmuUi();

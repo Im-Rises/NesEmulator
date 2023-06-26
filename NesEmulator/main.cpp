@@ -9,6 +9,8 @@
 /// To Do list:
 /// - Re-implement mappers
 /// - Correct CPU bugs in testCpu.cpp
+/// - Change the Nes in NesEmuUi to be portable. The Nes should be able to be used in a different project (like command line).
+
 
 int main(int argc, char* argv[]) {
     std::cout << PROJECT_NAME << " " << PROJECT_VERSION << " by " << AUTHOR << std::endl;
