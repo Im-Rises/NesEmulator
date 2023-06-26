@@ -150,6 +150,9 @@ OpenGL:
 WebGL:  
 <https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API>
 
+OpenAL:  
+<https://www.openal.org/>
+
 Dear ImGui:  
 <https://github.com/ocornut/imgui>
 

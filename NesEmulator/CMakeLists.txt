@@ -5,13 +5,14 @@ include_directories("${CMAKE_SOURCE_DIR}/dependencies/glfw/include")
 
 file(GLOB_RECURSE SRCS_IMGUI "${CMAKE_SOURCE_DIR}/dependencies/imgui/*.cpp")
 file(GLOB_RECURSE SRCS_GLAD "${CMAKE_SOURCE_DIR}/dependencies/glad/*.c")
+file(GLOB_RECURSE SRCS_BINARYLIB "${CMAKE_SOURCE_DIR}/dependencies/binaryLib/*.c")
 
 file(GLOB_RECURSE SRCS "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/*.cpp")
 
 set(OpenGL_GL_PREFERENCE GLVND)
 find_package(OpenGL REQUIRED)
 
-add_executable(${PROJECT_NAME} main.cpp ${SRCS} ${SRCS_IMGUI} ${SRCS_GLAD})
+add_executable(${PROJECT_NAME} main.cpp ${SRCS} ${SRCS_IMGUI} ${SRCS_GLAD} ${SRCS_BINARYLIB})
 
 target_link_libraries(${PROJECT_NAME} OpenGL::GL)
 
