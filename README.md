@@ -162,10 +162,6 @@ Dear ImGui - Memory Editor:
 Emscripten:  
 <https://emscripten.org/>
 
-<!--
-https://github.com/aiekick/ImGuiFileDialog
--->
-
 ## Contributors
 
 Quentin MOREL :
